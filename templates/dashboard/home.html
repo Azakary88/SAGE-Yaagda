@@ -1,0 +1,629 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de bord | DREPPNF Yaagda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="h3 mb-1">{{ dashboard_title }}</h1>
+        <p class="text-muted mb-0">{{ dashboard_intro }}</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'innovations:activity_report' %}" class="btn btn-outline-success">Rapports et syntheses</a>
+        {% if user.can_add_activity %}
+            <a href="{% url 'innovations:activity_create' %}" class="btn btn-success">Enregistrer une activite</a>
+        {% endif %}
+        {% if user.can_add_school %}
+            <a href="{% url 'schools:create' %}" class="btn btn-success">Enregistrer une ecole</a>
+        {% endif %}
+        {% if user.can_add_province %}
+            <a href="{% url 'schools:province_create' %}" class="btn btn-outline-success">Enregistrer une province</a>
+        {% endif %}
+        {% if user.can_add_ceb %}
+            <a href="{% url 'schools:ceb_create' %}" class="btn btn-outline-success">Enregistrer une CEB</a>
+        {% endif %}
+        {% if user.can_add_provincial_user %}
+            <a href="{% url 'accounts:provincial_list' %}" class="btn btn-outline-secondary">Agents provinciaux</a>
+        {% endif %}
+        {% if user.can_add_pedagogical_supervisor %}
+            <a href="{% url 'accounts:supervisor_list' %}" class="btn btn-outline-secondary">Encadreurs pedagogiques</a>
+        {% endif %}
+        {% if user.can_add_school_director %}
+            <a href="{% url 'accounts:director_list' %}" class="btn btn-outline-secondary">Directeurs d'ecole</a>
+        {% endif %}
+        {% if user.can_access_admin %}
+            <a href="/admin/" class="btn btn-outline-dark">Administration</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6 col-xl-3">
+        <div class="card metric-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="metric-label">{{ primary_metric_label }}</div>
+                <div class="metric-value">{{ primary_metric_value }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card metric-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="metric-label">{{ secondary_metric_label }}</div>
+                <div class="metric-value">{{ secondary_metric_value }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card metric-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="metric-label">{{ tertiary_metric_label }}</div>
+                <div class="metric-value">{{ tertiary_metric_value }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card metric-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="metric-label">{{ quaternary_metric_label }}</div>
+                <div class="metric-value">{{ quaternary_metric_value }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <h2 class="h6 text-uppercase text-muted mb-3">Perimetre de consultation</h2>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="small text-muted">Regions</div>
+                <div class="fw-semibold">{{ visible_scope.regions }}</div>
+            </div>
+            <div class="col-md-3">
+                <div class="small text-muted">Provinces</div>
+                <div class="fw-semibold">{{ visible_scope.provinces }}</div>
+            </div>
+            <div class="col-md-3">
+                <div class="small text-muted">CEB</div>
+                <div class="fw-semibold">{{ visible_scope.cebs }}</div>
+            </div>
+            <div class="col-md-3">
+                <div class="small text-muted">Ecoles</div>
+                <div class="fw-semibold">{{ visible_scope.schools }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Activites par innovation</h2>
+                <canvas id="innovationChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">{{ comparison_title }}</h2>
+                <canvas id="comparisonChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if ai_analysis.enabled %}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <div>
+                    <h2 class="h5 mb-1">{{ ai_title }}</h2>
+                    <p class="text-muted mb-0">{{ ai_subtitle }} Moteur utilise : {{ ai_analysis.engine_name }}.</p>
+                </div>
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <span class="badge text-bg-danger">Risque eleve : {{ ai_analysis.summary.high_risk }}</span>
+                    <span class="badge text-bg-warning">Suivi prioritaire : {{ ai_analysis.summary.monitored }}</span>
+                    <span class="badge text-bg-success">Bonne dynamique : {{ ai_analysis.summary.healthy }}</span>
+                    <span class="badge text-bg-primary">Confiance moyenne : {{ ai_analysis.summary.avg_confidence }}/100</span>
+                    <a href="{% url 'dashboard:ai_analysis' %}" class="btn btn-sm btn-outline-secondary">Analyse detaillee</a>
+                    <a href="{% url 'dashboard:ai_analysis_pdf' %}" class="btn btn-sm btn-outline-success">Rapport PDF</a>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-5">
+                    <canvas id="aiRiskChart"></canvas>
+                </div>
+                <div class="col-lg-7">
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Ecole</th>
+                                    <th>Profil IA</th>
+                                    <th>Score de risque</th>
+                                    <th>Confiance</th>
+                                    <th>Facteurs dominants</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for insight in ai_analysis.insights %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'schools:detail' insight.school.id %}" class="text-decoration-none fw-semibold">
+                                                {{ insight.school_name }}
+                                            </a>
+                                            <div class="small text-muted">{{ insight.province_name }} | {{ insight.ceb_name }}</div>
+                                        </td>
+                                        <td><span class="badge text-bg-{{ insight.badge }}">{{ insight.profile_label }}</span></td>
+                                        <td>{{ insight.risk_score }}/100</td>
+                                        <td>{{ insight.confidence_score }}/100</td>
+                                        <td>
+                                            <div>{{ insight.explanation }}</div>
+                                            <div class="small text-muted">{{ insight.recommended_action }}</div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% if dashboard_level == 'province' %}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                <h2 class="h5 mb-0">Synthese des provinces</h2>
+                {% if user.can_add_provincial_user %}
+                    <a href="{% url 'accounts:provincial_create' %}" class="btn btn-sm btn-outline-secondary">Nouvel agent provincial</a>
+                {% endif %}
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Province</th>
+                            <th>CEB</th>
+                            <th>Ecoles</th>
+                            <th>Activites</th>
+                            <th>Score moyen</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for province in province_rows %}
+                            <tr>
+                                <td>{{ province.code }}</td>
+                                <td>{{ province.name }}</td>
+                                <td>{{ province.total_cebs }}</td>
+                                <td>{{ province.total_schools }}</td>
+                                <td>{{ province.total_activities }}</td>
+                                <td>
+                                    {% if province.avg_score %}
+                                        {{ province.avg_score|floatformat:1 }}/100
+                                    {% else %}
+                                        <span class="text-muted">N/D</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-nowrap">
+                                    <a href="{% url 'schools:province_evaluation_create' %}?province={{ province.id }}" class="btn btn-sm btn-outline-primary">Evaluer</a>
+                                    {% if user.can_add_province %}
+                                        <a href="{% url 'schools:province_update' province.id %}" class="btn btn-sm btn-outline-success">Modifier</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">Aucune province visible.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% elif dashboard_level == 'ceb' %}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                <h2 class="h5 mb-0">Synthese des CEB</h2>
+                {% if user.can_add_pedagogical_supervisor %}
+                    <a href="{% url 'accounts:supervisor_create' %}" class="btn btn-sm btn-outline-secondary">Nouvel encadreur pedagogique</a>
+                {% endif %}
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>CEB</th>
+                            <th>Province</th>
+                            <th>Ecoles</th>
+                            <th>Activites</th>
+                            <th>Score moyen</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ceb in ceb_rows %}
+                            <tr>
+                                <td>{{ ceb.code }}</td>
+                                <td>{{ ceb.name }}</td>
+                                <td>{{ ceb.province.name }}</td>
+                                <td>{{ ceb.total_schools }}</td>
+                                <td>{{ ceb.total_activities }}</td>
+                                <td>
+                                    {% if ceb.avg_score %}
+                                        {{ ceb.avg_score|floatformat:1 }}/100
+                                    {% else %}
+                                        <span class="text-muted">N/D</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-nowrap">
+                                    <a href="{% url 'schools:ceb_evaluation_create' %}?ceb={{ ceb.id }}" class="btn btn-sm btn-outline-primary">Evaluer</a>
+                                    {% if user.can_add_ceb %}
+                                        <a href="{% url 'schools:ceb_update' ceb.id %}" class="btn btn-sm btn-outline-success">Modifier</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">Aucune CEB visible.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% elif dashboard_level == 'school' %}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                <h2 class="h5 mb-0">Synthese des ecoles</h2>
+                {% if user.can_add_school_director %}
+                    <a href="{% url 'accounts:director_create' %}" class="btn btn-sm btn-outline-secondary">Nouveau directeur d'ecole</a>
+                {% endif %}
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Ecole</th>
+                            <th>Directeur</th>
+                            <th>Activites</th>
+                    <th>Score administratif</th>
+                    <th>Score d'innovation</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for school in school_rows %}
+                            <tr>
+                                <td>{{ school.code }}</td>
+                                <td><a href="{% url 'schools:detail' school.id %}" class="text-decoration-none fw-semibold">{{ school.name }}</a></td>
+                                <td>
+                                    {% if school.director %}
+                                        {{ school.director.get_full_name|default:school.director.username }}
+                                    {% else %}
+                                        <span class="text-muted">Non attribue</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ school.total_activities }}</td>
+                                <td>
+                                    {% if school.avg_score %}
+                                        {{ school.avg_score|floatformat:1 }}/100
+                                    {% else %}
+                                        <span class="text-muted">N/D</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if school.innovation_score %}
+                                        {{ school.innovation_score|floatformat:1 }}/100
+                                    {% else %}
+                                        <span class="text-muted">N/D</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-nowrap">
+                                    <a href="{% url 'schools:school_evaluation_create' %}?school={{ school.id }}" class="btn btn-sm btn-outline-primary">Evaluer</a>
+                                    <a href="{% url 'schools:detail' school.id %}" class="btn btn-sm btn-outline-secondary">Voir</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">Aucune ecole visible.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                <div>
+                    <h2 class="h5 mb-1">Activites declarees par votre ecole</h2>
+                    {% if director_school %}
+                        <p class="text-muted mb-0">{{ director_school.name }} | {{ director_school.ceb.name }} | {{ director_school.province.name }}</p>
+                    {% endif %}
+                </div>
+                {% if user.can_add_activity and director_school %}
+                    <a href="{% url 'innovations:activity_create' %}?school={{ director_school.id }}" class="btn btn-sm btn-success">Enregistrer une activite</a>
+                {% endif %}
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Innovation</th>
+                            <th>Titre</th>
+                            <th>Images</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in director_activities %}
+                            <tr>
+                                <td>{{ activity.reporting_date }}</td>
+                                <td>{{ activity.innovation.name }}</td>
+                                <td>{{ activity.title }}</td>
+                                <td>{{ activity.media_total }}</td>
+                                <td class="text-nowrap">
+                                    <a href="{% url 'innovations:activity_detail' activity.id %}" class="btn btn-sm btn-outline-secondary">Voir</a>
+                                    <a href="{% url 'innovations:activity_update' activity.id %}" class="btn btn-sm btn-outline-success">Modifier</a>
+                                    <a href="{% url 'innovations:activity_delete' activity.id %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">Aucune activite n'a encore ete declaree pour votre ecole.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Derniers medias ajoutes</h2>
+            <div class="row g-3">
+                {% for media in latest_media %}
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 bg-light">
+                            <img src="{{ media.file.url }}" class="card-img-top" alt="{{ media.activity.title }}">
+                            <div class="card-body">
+                                <div class="fw-semibold">{{ media.activity.title }}</div>
+                                <div class="small text-muted mb-2">{{ media.created_at|date:"d/m/Y H:i" }}</div>
+                                <p class="small mb-0">{{ media.comment|default:'Aucun commentaire.' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted mb-0">Aucun media n'a encore ete ajoute.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% if show_school_performance_sections %}
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Ecoles les plus performantes</h2>
+                    <div class="list-group list-group-flush">
+                        {% for school in top_schools %}
+                            <div class="list-group-item px-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="{% url 'schools:detail' school.pk %}" class="fw-semibold text-decoration-none">{{ school.name }}</a>
+                                    <span class="badge text-bg-success">{{ school.avg_score|floatformat:1 }}/100</span>
+                                </div>
+                                <small class="text-muted">{{ school.total_activities }} activite(s)</small>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted mb-0">Aucune evaluation n'est disponible pour le moment.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Besoins prioritaires identifies</h2>
+                    <div class="list-group list-group-flush">
+                        {% for item in priority_needs %}
+                            <div class="list-group-item px-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="{% url 'schools:detail' item.school.pk %}" class="fw-semibold text-decoration-none">{{ item.school.name }}</a>
+                                    <span class="badge text-bg-warning">
+                                        {% if item.avg_score %}{{ item.avg_score|floatformat:1 }}/100{% else %}N/D{% endif %}
+                                    </span>
+                                </div>
+                                <small class="text-muted">{{ item.reasons }}</small>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted mb-0">Aucun besoin prioritaire n'a ete identifie.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="row g-4 mt-1">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Dernieres activites declarees</h2>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Province</th>
+                                <th>Ecole</th>
+                                <th>Innovation</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in recent_activities %}
+                                <tr>
+                                    <td>{{ activity.school.province.name }}</td>
+                                    <td><a href="{% url 'innovations:activity_detail' activity.pk %}" class="text-decoration-none">{{ activity.school.name }}</a></td>
+                                    <td>{{ activity.innovation.name }}</td>
+                                    <td>{{ activity.reporting_date }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-muted">Aucune activite n'a encore ete declaree.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 mb-0">Dernieres recommandations</h2>
+                    <span class="badge text-bg-secondary">{{ recommendations_total }}</span>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for recommendation in recent_recommendations %}
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                <div>
+                                    <div class="fw-semibold">{{ recommendation.school.name }}</div>
+                                    <small class="text-muted">{{ recommendation.recommendation_text }}</small>
+                                </div>
+                                <span class="badge text-bg-secondary">{{ recommendation.get_priority_display }}</span>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted mb-0">Aucune recommandation n'a encore ete generee.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+    const innovationLabels = JSON.parse('{{ innovation_chart_labels|escapejs }}');
+    const innovationValues = JSON.parse('{{ innovation_chart_values|escapejs }}');
+    const comparisonLabels = JSON.parse('{{ comparison_chart_labels|escapejs }}');
+    const comparisonValues = JSON.parse('{{ comparison_chart_values|escapejs }}');
+    const comparisonScores = JSON.parse('{{ comparison_chart_scores|escapejs }}');
+    const aiLabels = JSON.parse('{{ ai_analysis.chart_labels|escapejs }}');
+    const aiValues = JSON.parse('{{ ai_analysis.chart_values|escapejs }}');
+
+    new Chart(document.getElementById('innovationChart'), {
+        type: 'bar',
+        data: {
+            labels: innovationLabels,
+            datasets: [{
+                label: 'Nombre d activites',
+                data: innovationValues,
+                backgroundColor: ['#198754', '#0d6efd', '#fd7e14', '#20c997', '#6f42c1']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    const comparisonDatasets = [{
+        type: 'bar',
+        label: '{{ comparison_value_label }}',
+        data: comparisonValues,
+        backgroundColor: '#198754',
+        borderRadius: 6
+    }];
+
+    {% if show_comparison_scores %}
+        comparisonDatasets.push({
+            type: 'line',
+            label: '{{ comparison_score_label }}',
+            data: comparisonScores,
+            borderColor: '#fd7e14',
+            backgroundColor: '#fd7e14',
+            tension: 0.3,
+            yAxisID: 'y1'
+        });
+    {% endif %}
+
+    new Chart(document.getElementById('comparisonChart'), {
+        data: {
+            labels: comparisonLabels,
+            datasets: comparisonDatasets
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+                {% if show_comparison_scores %}
+                y1: {
+                    beginAtZero: true,
+                    max: 100,
+                    position: 'right',
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                }
+                {% endif %}
+            }
+        }
+    });
+
+    const aiRiskCanvas = document.getElementById('aiRiskChart');
+    if (aiRiskCanvas && aiLabels.length) {
+        new Chart(aiRiskCanvas, {
+            type: 'bar',
+            data: {
+                labels: aiLabels,
+                datasets: [{
+                    label: 'Score de risque IA',
+                    data: aiValues,
+                    backgroundColor: '#dc3545',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

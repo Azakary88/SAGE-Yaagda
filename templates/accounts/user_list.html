@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} | DREPPNF Yaagda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="h3 mb-1">{{ page_title }}</h1>
+        <p class="text-muted mb-0">{{ page_intro }}</p>
+    </div>
+    {% if create_url_name %}
+        <a href="{% url create_url_name %}" class="btn btn-success">Nouveau compte</a>
+    {% endif %}
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Nom d'utilisateur</th>
+                    <th>Nom complet</th>
+                    <th>Role</th>
+                    <th>Region</th>
+                    <th>Province</th>
+                    <th>CEB</th>
+                    <th>Actif</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for managed_user in users %}
+                    <tr>
+                        <td>{{ managed_user.username }}</td>
+                        <td>{{ managed_user.get_full_name|default:managed_user.username }}</td>
+                        <td>{{ managed_user.get_role_display }}</td>
+                        <td>{{ managed_user.region.name|default:'-' }}</td>
+                        <td>{{ managed_user.province.name|default:'-' }}</td>
+                        <td>{{ managed_user.ceb.name|default:'-' }}</td>
+                        <td>{{ managed_user.is_active|yesno:'Oui,Non' }}</td>
+                        <td class="text-nowrap">
+                            <a href="{% url update_url_name managed_user.pk %}" class="btn btn-sm btn-outline-success">Modifier</a>
+                            <a href="{% url delete_url_name managed_user.pk %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">Aucun utilisateur n'est disponible dans votre perimetre.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

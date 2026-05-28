@@ -1,0 +1,116 @@
+body {
+    background: linear-gradient(180deg, #f5f8f1 0%, #eef4ea 100%);
+    color: #203126;
+}
+
+.app-navbar .navbar-collapse {
+    min-width: 0;
+}
+
+.app-navbar .navbar-nav {
+    row-gap: 0.35rem;
+}
+
+.app-navbar .nav-link,
+.app-navbar .dropdown-toggle {
+    white-space: nowrap;
+}
+
+.app-navbar .nav-link {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+}
+
+.navbar-account {
+    width: 100%;
+}
+
+.navbar-account .dropdown {
+    width: 100%;
+}
+
+.navbar-account-toggle {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-account-name {
+    display: inline-block;
+    max-width: 14rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+}
+
+.navbar .dropdown-menu {
+    border: 0;
+    border-radius: 0.9rem;
+    min-width: 15rem;
+}
+
+.navbar .dropdown-item {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+}
+
+.navbar .dropdown-item:active {
+    background-color: #198754;
+}
+
+.metric-card {
+    background: white;
+    border-left: 5px solid #198754;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6c757d;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #198754;
+}
+
+.login-page {
+    background:
+        radial-gradient(circle at top left, rgba(25, 135, 84, 0.18), transparent 35%),
+        linear-gradient(160deg, #f5f8f1 0%, #edf3e7 100%);
+}
+
+.card {
+    border-radius: 1rem;
+}
+
+.table > :not(caption) > * > * {
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+}
+
+@media (min-width: 1200px) {
+    .navbar-account {
+        width: auto;
+    }
+
+    .navbar-account .dropdown {
+        width: auto;
+    }
+
+    .navbar-account-toggle {
+        width: auto;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .navbar .dropdown-menu {
+        min-width: 100%;
+        margin-top: 0.25rem;
+    }
+}

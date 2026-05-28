@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}CEB | DREPPNF Yaagda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="h3 mb-1">Circonscriptions d'education de base</h1>
+        <p class="text-muted mb-0">Consultez les CEB accessibles selon votre niveau de responsabilite.</p>
+    </div>
+    {% if user.can_add_ceb %}
+        <a href="{% url 'schools:ceb_create' %}" class="btn btn-success">Enregistrer une CEB</a>
+    {% endif %}
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="province" class="form-label">Province</label>
+                <select id="province" name="province" class="form-select" title="Province">
+                    <option value="">Toutes</option>
+                    {% for province in provinces %}
+                        <option value="{{ province.id }}" {% if selected_province == province.id|stringformat:'s' %}selected{% endif %}>{{ province.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-success">Filtrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Code</th>
+                    <th>CEB</th>
+                    <th>Province</th>
+                    <th>Ecoles</th>
+                    <th>Activites</th>
+                    <th>Score moyen</th>
+                    {% if user.can_add_ceb %}<th>Actions</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for ceb in cebs %}
+                    <tr>
+                        <td>{{ ceb.code }}</td>
+                        <td>{{ ceb.name }}</td>
+                        <td>{{ ceb.province.name }}</td>
+                        <td>{{ ceb.total_schools }}</td>
+                        <td>{{ ceb.total_activities }}</td>
+                        <td>
+                            {% if ceb.avg_score %}
+                                {{ ceb.avg_score|floatformat:1 }}/100
+                            {% else %}
+                                <span class="text-muted">N/D</span>
+                            {% endif %}
+                        </td>
+                        {% if user.can_add_ceb %}
+                            <td class="text-nowrap">
+                                <a href="{% url 'schools:ceb_evaluation_create' %}?ceb={{ ceb.id }}" class="btn btn-sm btn-outline-primary">Evaluer</a>
+                                <a href="{% url 'schools:ceb_update' ceb.pk %}" class="btn btn-sm btn-outline-success">Modifier</a>
+                                <a href="{% url 'schools:ceb_delete' ceb.pk %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="{% if user.can_add_ceb %}7{% else %}6{% endif %}" class="text-center text-muted py-4">Aucune CEB n'est disponible dans votre perimetre.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

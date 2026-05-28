@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ form_title }} | DREPPNF Yaagda{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-3">{{ form_title }}</h1>
+                {% if form_intro %}
+                    <p class="text-muted">{{ form_intro }}</p>
+                {% endif %}
+                <p class="mb-4">
+                    Vous etes sur le point de supprimer definitivement : <strong>{{ object }}</strong>.
+                </p>
+                <form method="post" class="d-flex flex-wrap gap-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                    {% if cancel_url %}
+                        <a href="{{ cancel_url }}" class="btn btn-outline-secondary">Annuler</a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

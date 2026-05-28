@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}Analyse IA | DREPPNF Yaagda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="h3 mb-1">{{ page_title }}</h1>
+        <p class="text-muted mb-0">{{ page_intro }}</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'dashboard:ai_analysis_pdf' %}" class="btn btn-success">Exporter le rapport PDF</a>
+        <a href="{% url 'dashboard:home' %}" class="btn btn-outline-secondary">Retour au tableau de bord</a>
+    </div>
+</div>
+
+{% if ai_analysis.enabled %}
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="small text-muted">Moteur IA</div>
+                    <div class="fw-semibold">{{ ai_analysis.engine_name }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="small text-muted">Ecoles analysees</div>
+                    <div class="fw-semibold">{{ ai_analysis.summary.total_schools }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="small text-muted">Confiance moyenne</div>
+                    <div class="fw-semibold">{{ ai_analysis.summary.avg_confidence }}/100</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="small text-muted">Risque eleve</div>
+                    <div class="fw-semibold text-danger">{{ ai_analysis.summary.high_risk }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">{{ ai_title }}</h2>
+                    <p class="text-muted">{{ ai_subtitle }}</p>
+                    <canvas id="aiDetailedChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Presentation du modele</h2>
+                    <p>{{ ai_analysis.methodology.description }}</p>
+                    <p>{{ ai_analysis.methodology.target }}</p>
+                    <p>{{ ai_analysis.methodology.confidence_rule }}</p>
+                    <div class="small text-muted mb-2">Variables prises en compte</div>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for feature in ai_analysis.methodology.features %}
+                            <span class="badge text-bg-light border">{{ feature }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Resultats detailles par ecole</h2>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Ecole</th>
+                            <th>Profil IA</th>
+                            <th>Risque</th>
+                            <th>Confiance</th>
+                            <th>Activites</th>
+                            <th>Scores</th>
+                            <th>Interpretation IA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for insight in ai_analysis.insights %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'schools:detail' insight.school.id %}" class="text-decoration-none fw-semibold">
+                                        {{ insight.school_name }}
+                                    </a>
+                                    <div class="small text-muted">{{ insight.province_name }} | {{ insight.ceb_name }}</div>
+                                </td>
+                                <td><span class="badge text-bg-{{ insight.badge }}">{{ insight.profile_label }}</span></td>
+                                <td>{{ insight.risk_score }}/100</td>
+                                <td>{{ insight.confidence_score }}/100</td>
+                                <td>{{ insight.total_activities }}</td>
+                                <td>
+                                    <div class="small">Innovation : {{ insight.avg_innovation_score }}/100</div>
+                                    <div class="small">Administratif : {{ insight.avg_admin_score }}/100</div>
+                                </td>
+                                <td>
+                                    <div>{{ insight.explanation }}</div>
+                                    <div class="small text-muted">{{ insight.recommended_action }}</div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <p class="text-muted mb-0">Aucune donnee exploitable n'est encore disponible pour alimenter l'analyse IA.</p>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+    const aiDetailedCanvas = document.getElementById('aiDetailedChart');
+    const aiLabels = JSON.parse('{{ ai_analysis.chart_labels|escapejs }}');
+    const aiRiskValues = JSON.parse('{{ ai_analysis.chart_values|escapejs }}');
+    const aiConfidenceValues = JSON.parse('{{ ai_analysis.confidence_chart_values|escapejs }}');
+
+    if (aiDetailedCanvas && aiLabels.length) {
+        new Chart(aiDetailedCanvas, {
+            data: {
+                labels: aiLabels,
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Risque IA',
+                        data: aiRiskValues,
+                        backgroundColor: '#dc3545',
+                        borderRadius: 6
+                    },
+                    {
+                        type: 'line',
+                        label: 'Confiance',
+                        data: aiConfidenceValues,
+                        borderColor: '#0d6efd',
+                        backgroundColor: '#0d6efd',
+                        yAxisID: 'y1',
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        max: 100,
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

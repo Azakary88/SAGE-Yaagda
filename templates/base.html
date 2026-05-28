@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}DREPPNF Yaagda{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-xl navbar-dark bg-success shadow-sm app-navbar">
+        <div class="container-xxl px-3 px-xl-4">
+            <a class="navbar-brand fw-semibold" href="{% url 'dashboard:home' %}">DREPPNF Yaagda</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav me-auto mb-3 mb-xl-0 align-items-xl-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard:home' %}">Accueil</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navTerritory" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Territoire
+                            </a>
+                            <ul class="dropdown-menu shadow-sm" aria-labelledby="navTerritory">
+                                <li><a class="dropdown-item" href="{% url 'schools:province_list' %}">Provinces</a></li>
+                                <li><a class="dropdown-item" href="{% url 'schools:ceb_list' %}">CEB</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navSchools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Ecoles
+                            </a>
+                            <ul class="dropdown-menu shadow-sm" aria-labelledby="navSchools">
+                                <li><a class="dropdown-item" href="{% url 'schools:list' %}">Ecoles</a></li>
+                                {% if user.can_add_school %}
+                                    <li><a class="dropdown-item" href="{% url 'schools:create' %}">Enregistrer une ecole</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navInnovations" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Innovations
+                            </a>
+                            <ul class="dropdown-menu shadow-sm" aria-labelledby="navInnovations">
+                                <li><a class="dropdown-item" href="{% url 'innovations:activity_list' %}">Activites</a></li>
+                                <li><a class="dropdown-item" href="{% url 'innovations:activity_report' %}">Rapports et syntheses</a></li>
+                                <li><a class="dropdown-item" href="{% url 'innovations:recommendation_list' %}">Recommandations</a></li>
+                                {% if user.can_add_activity %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url 'innovations:activity_create' %}">Enregistrer une activite</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+
+                        {% if user.can_add_provincial_user or user.can_add_pedagogical_supervisor or user.can_add_school_director %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navUsers" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Utilisateurs
+                                </a>
+                                <ul class="dropdown-menu shadow-sm" aria-labelledby="navUsers">
+                                    {% if user.can_add_provincial_user %}
+                                        <li><a class="dropdown-item" href="{% url 'accounts:provincial_list' %}">Agents provinciaux</a></li>
+                                    {% endif %}
+                                    {% if user.can_add_pedagogical_supervisor %}
+                                        <li><a class="dropdown-item" href="{% url 'accounts:supervisor_list' %}">Encadreurs pedagogiques</a></li>
+                                    {% endif %}
+                                    {% if user.can_add_school_director %}
+                                        <li><a class="dropdown-item" href="{% url 'accounts:director_list' %}">Directeurs d'ecole</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navDecision" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Pilotage
+                            </a>
+                            <ul class="dropdown-menu shadow-sm" aria-labelledby="navDecision">
+                                <li><a class="dropdown-item" href="{% url 'dashboard:home' %}">Tableau de bord</a></li>
+                                <li><a class="dropdown-item" href="{% url 'dashboard:ai_analysis' %}">Analyse IA</a></li>
+                                <li><a class="dropdown-item" href="{% url 'dashboard:ai_analysis_pdf' %}">Rapport IA au format PDF</a></li>
+                                {% if user.can_access_admin %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/">Administration</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+                <div class="navbar-account ms-xl-3 mt-2 mt-xl-0">
+                    {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <button class="btn btn-outline-light btn-sm dropdown-toggle navbar-account-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="navbar-account-name">{{ user.get_full_name|default:user.username|truncatechars:20 }}</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                <li>
+                                    <div class="dropdown-item-text">
+                                        <div class="fw-semibold text-dark">{{ user.get_full_name|default:user.username }}</div>
+                                        <div class="small text-muted">{{ user.get_role_display }}</div>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" action="{% url 'logout' %}" class="px-3 py-1">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">Se deconnecter</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-light btn-sm">Connexion</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="py-4">
+        <div class="container-xxl px-3 px-xl-4">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

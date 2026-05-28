@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Activites | DREPPNF Yaagda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="h3 mb-1">Registre des activites</h1>
+        <p class="text-muted mb-0">Consultez les activites declarees dans le cadre des metiers scolaires, des TIC et de l'anglais.</p>
+    </div>
+    {% if user.can_add_activity %}
+        <a href="{% url 'innovations:activity_create' %}" class="btn btn-success">Enregistrer une activite</a>
+    {% endif %}
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Innovation</label>
+                <select name="innovation" class="form-select">
+                    <option value="">Toutes</option>
+                    {% for innovation in innovations %}
+                        <option value="{{ innovation.id }}" {% if selected_innovation == innovation.id|stringformat:'s' %}selected{% endif %}>{{ innovation.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Ecole</label>
+                <select name="school" class="form-select">
+                    <option value="">Toutes</option>
+                    {% for school in schools %}
+                        <option value="{{ school.id }}" {% if selected_school == school.id|stringformat:'s' %}selected{% endif %}>{{ school.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-success">Filtrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Date</th>
+                    <th>Province</th>
+                    <th>CEB</th>
+                    <th>Ecole</th>
+                    <th>Innovation</th>
+                    <th>Titre</th>
+                    <th>Participants</th>
+                    <th>Images</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in activities %}
+                    <tr>
+                        <td>{{ activity.reporting_date }}</td>
+                        <td>{{ activity.school.province.name }}</td>
+                        <td>{{ activity.school.ceb.name }}</td>
+                        <td>{{ activity.school.name }}</td>
+                        <td>{{ activity.innovation.name }}</td>
+                        <td><a href="{% url 'innovations:activity_detail' activity.pk %}" class="text-decoration-none fw-semibold">{{ activity.title }}</a></td>
+                        <td>{{ activity.participating_students }}</td>
+                        <td>{{ activity.media_total }}</td>
+                        <td class="text-nowrap">
+                            <a href="{% url 'innovations:activity_detail' activity.pk %}" class="btn btn-sm btn-outline-secondary">Voir</a>
+                            {% if user.can_add_activity %}
+                                <a href="{% url 'innovations:activity_update' activity.pk %}" class="btn btn-sm btn-outline-success">Modifier</a>
+                                <a href="{% url 'innovations:activity_delete' activity.pk %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center text-muted py-4">Aucune activite ne correspond aux criteres de consultation.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

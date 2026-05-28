@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ school.name }} | DREPPNF Yaagda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <h1 class="h3 mb-1">{{ school.name }}</h1>
+        <p class="text-muted mb-0">{{ school.code }} | {{ school.province.name }} | {{ school.ceb.name }}</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        {% if can_add_activity_here %}
+            <a href="{% url 'innovations:activity_create' %}?school={{ school.id }}" class="btn btn-success">Enregistrer une activite</a>
+        {% endif %}
+        {% if can_evaluate_school_here %}
+            <a href="{% url 'schools:school_evaluation_create' %}?school={{ school.id }}" class="btn btn-outline-primary">Renseigner l'evaluation</a>
+        {% endif %}
+        {% if can_manage_school_here %}
+            <a href="{% url 'schools:update' school.id %}" class="btn btn-outline-secondary">Modifier</a>
+            <a href="{% url 'schools:delete' school.id %}" class="btn btn-outline-danger">Supprimer</a>
+        {% elif user.can_access_admin %}
+            <a href="/admin/schools/school/{{ school.id }}/change/" class="btn btn-outline-secondary">Modifier dans l'admin</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-muted">Presentation de l'etablissement</h2>
+                <p class="mb-2"><strong>Type :</strong> {{ school.get_school_type_display }}</p>
+                <p class="mb-2"><strong>Statut :</strong> {{ school.get_status_display }}</p>
+                <p class="mb-2"><strong>Localite :</strong> {{ school.locality|default:'Non renseignee' }}</p>
+                <p class="mb-2"><strong>Capacite :</strong> {{ school.student_capacity }}</p>
+                <p class="mb-0">
+                    <strong>Directeur :</strong>
+                    {% if school.director %}
+                        {{ school.director.get_full_name|default:school.director.username }}
+                    {% else %}
+                        Non attribue
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-muted">Dernieres activites declarees</h2>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Innovation</th>
+                                <th>Titre</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in activities %}
+                                <tr>
+                                    <td>{{ activity.innovation.name }}</td>
+                                    <td><a href="{% url 'innovations:activity_detail' activity.id %}" class="text-decoration-none">{{ activity.title }}</a></td>
+                                    <td>{{ activity.reporting_date }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                <td colspan="3" class="text-muted">Aucune activite n'a encore ete declaree pour cet etablissement.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Evaluations administratives</h2>
+                <div class="list-group list-group-flush">
+                    {% for evaluation in administrative_evaluations %}
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-semibold">{{ evaluation.evaluation_date }}</span>
+                                <span class="badge text-bg-primary">{{ evaluation.performance_score|floatformat:1 }}/100</span>
+                            </div>
+                            <small class="text-muted">{{ evaluation.recommendations|default:'Aucune recommandation saisie.' }}</small>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted mb-0">Aucune evaluation administrative n'est disponible pour le moment.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Evaluations des innovations</h2>
+                <div class="list-group list-group-flush">
+                    {% for evaluation in evaluations %}
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-semibold">{{ evaluation.innovation.name }}</span>
+                                <span class="badge text-bg-success">{{ evaluation.performance_score }}/100</span>
+                            </div>
+                            <small class="text-muted">{{ evaluation.observed_results|default:'Aucun resultat saisi.' }}</small>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted mb-0">Aucune evaluation des innovations n'est disponible pour le moment.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Recommandations</h2>
+                <div class="list-group list-group-flush">
+                    {% for recommendation in recommendations %}
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-semibold">{{ recommendation.get_priority_display }}</span>
+                                <span class="badge text-bg-secondary">{{ recommendation.get_status_display }}</span>
+                            </div>
+                            <small class="text-muted">{{ recommendation.recommendation_text }}</small>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted mb-0">Aucune recommandation disponible.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

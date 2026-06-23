@@ -3,9 +3,22 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-g6fw+!^@i-6n&qjsowbaca@0sdkrei5fs07$g=$00fn&-p#fk#'
-DEBUG = True
+SECRET_KEY = os.getenv(
+    'SECRET_KEY',
+    'django-insecure-g6fw+!^@i-6n&qjsowbaca@0sdkrei5fs07$g=$00fn&-p#fk#',
+)
+DEBUG = os.getenv('DEBUG', 'True').lower() in {'1', 'true', 'yes'}
+
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS += [host for host in os.getenv('ALLOWED_HOSTS', '').split(',') if host]
+if render_hostname := os.getenv('RENDER_EXTERNAL_HOSTNAME'):
+    ALLOWED_HOSTS.append(render_hostname)
+
+CSRF_TRUSTED_ORIGINS = [
+    origin for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if origin
+]
+if render_hostname:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{render_hostname}')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -30,6 +43,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+if not DEBUG:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
 ROOT_URLCONF = 'dreppnf_platform.urls'
 
 TEMPLATES = [
@@ -50,9 +66,25 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dreppnf_platform.wsgi.application'
 
 USE_SQLITE = os.getenv('USE_SQLITE', '').lower() in {'1', 'true', 'yes'}
-USE_MYSQL = os.getenv('MYSQL_DATABASE') and not USE_SQLITE
+DATABASE_URL = os.getenv('DATABASE_URL')
+USE_MYSQL = os.getenv('MYSQL_DATABASE') and not USE_SQLITE and not DATABASE_URL
 
-if USE_MYSQL:
+if DATABASE_URL and not USE_SQLITE:
+    try:
+        import dj_database_url
+    except ImportError as exc:
+        raise RuntimeError(
+            'dj-database-url est requis lorsque DATABASE_URL est défini.'
+        ) from exc
+
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+elif USE_MYSQL:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -100,6 +132,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -109,3 +150,9 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard:home'
 LOGOUT_REDIRECT_URL = 'login'
 CSRF_FAILURE_VIEW = 'dreppnf_platform.views.csrf_failure'
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

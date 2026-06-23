@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -41,3 +42,7 @@ def csrf_failure(request, reason="", template_name="errors/csrf_failure.html"):
     )
     response['Cache-Control'] = 'no-store'
     return response
+
+
+def healthcheck(request):
+    return JsonResponse({'status': 'ok', 'service': 'SAGE YAADGA'})

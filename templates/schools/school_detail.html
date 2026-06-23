@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ school.name }} | DREPPNF Yaagda{% endblock %}
+{% block title %}{{ school.name }} | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
@@ -10,10 +10,10 @@
     </div>
     <div class="d-flex flex-wrap gap-2">
         {% if can_add_activity_here %}
-            <a href="{% url 'innovations:activity_create' %}?school={{ school.id }}" class="btn btn-success">Enregistrer une activite</a>
+            <a href="{% url 'innovations:activity_create' %}?school={{ school.id }}" class="btn btn-success">Enregistrer une activité</a>
         {% endif %}
         {% if can_evaluate_school_here %}
-            <a href="{% url 'schools:school_evaluation_create' %}?school={{ school.id }}" class="btn btn-outline-primary">Renseigner l'evaluation</a>
+            <a href="{% url 'schools:school_evaluation_create' %}?school={{ school.id }}" class="btn btn-outline-primary">Renseigner l'évaluation</a>
         {% endif %}
         {% if can_manage_school_here %}
             <a href="{% url 'schools:update' school.id %}" class="btn btn-outline-secondary">Modifier</a>
@@ -28,17 +28,17 @@
     <div class="col-md-4">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
-                <h2 class="h6 text-uppercase text-muted">Presentation de l'etablissement</h2>
+                <h2 class="h6 text-uppercase text-muted">Présentation de l'établissement</h2>
                 <p class="mb-2"><strong>Type :</strong> {{ school.get_school_type_display }}</p>
                 <p class="mb-2"><strong>Statut :</strong> {{ school.get_status_display }}</p>
-                <p class="mb-2"><strong>Localite :</strong> {{ school.locality|default:'Non renseignee' }}</p>
-                <p class="mb-2"><strong>Capacite :</strong> {{ school.student_capacity }}</p>
+                <p class="mb-2"><strong>Localité :</strong> {{ school.locality|default:'Non renseignée' }}</p>
+                <p class="mb-2"><strong>Capacité :</strong> {{ school.student_capacity }}</p>
                 <p class="mb-0">
                     <strong>Directeur :</strong>
                     {% if school.director %}
                         {{ school.director.get_full_name|default:school.director.username }}
                     {% else %}
-                        Non attribue
+                        Non attribué
                     {% endif %}
                 </p>
             </div>
@@ -47,7 +47,7 @@
     <div class="col-md-8">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
-                <h2 class="h6 text-uppercase text-muted">Dernieres activites declarees</h2>
+                <h2 class="h6 text-uppercase text-muted">Dernières activités déclarées</h2>
                 <div class="table-responsive">
                     <table class="table align-middle">
                         <thead>
@@ -66,7 +66,7 @@
                                 </tr>
                             {% empty %}
                                 <tr>
-                                <td colspan="3" class="text-muted">Aucune activite n'a encore ete declaree pour cet etablissement.</td>
+                                <td colspan="3" class="text-muted">Aucune activité n'a encore été déclarée pour cet établissement.</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -81,7 +81,7 @@
     <div class="col-lg-4">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
-                <h2 class="h5 mb-3">Evaluations administratives</h2>
+                <h2 class="h5 mb-3">Évaluations administratives</h2>
                 <div class="list-group list-group-flush">
                     {% for evaluation in administrative_evaluations %}
                         <div class="list-group-item px-0">
@@ -92,7 +92,7 @@
                             <small class="text-muted">{{ evaluation.recommendations|default:'Aucune recommandation saisie.' }}</small>
                         </div>
                     {% empty %}
-                        <p class="text-muted mb-0">Aucune evaluation administrative n'est disponible pour le moment.</p>
+                        <p class="text-muted mb-0">Aucune évaluation administrative n'est disponible pour le moment.</p>
                     {% endfor %}
                 </div>
             </div>
@@ -101,7 +101,7 @@
     <div class="col-lg-4">
         <div class="card shadow-sm border-0">
             <div class="card-body">
-                <h2 class="h5 mb-3">Evaluations des innovations</h2>
+                <h2 class="h5 mb-3">Évaluations des innovations</h2>
                 <div class="list-group list-group-flush">
                     {% for evaluation in evaluations %}
                         <div class="list-group-item px-0">
@@ -109,10 +109,10 @@
                                 <span class="fw-semibold">{{ evaluation.innovation.name }}</span>
                                 <span class="badge text-bg-success">{{ evaluation.performance_score }}/100</span>
                             </div>
-                            <small class="text-muted">{{ evaluation.observed_results|default:'Aucun resultat saisi.' }}</small>
+                            <small class="text-muted">{{ evaluation.observed_results|default:'Aucun résultat saisi.' }}</small>
                         </div>
                     {% empty %}
-                        <p class="text-muted mb-0">Aucune evaluation des innovations n'est disponible pour le moment.</p>
+                        <p class="text-muted mb-0">Aucune évaluation des innovations n'est disponible pour le moment.</p>
                     {% endfor %}
                 </div>
             </div>

@@ -11,26 +11,26 @@ def build_recommendation_from_evaluation(evaluation):
     if score < 40:
         priority = Recommendation.Priority.CRITICAL
         text = (
-            "Renforcer en urgence cette innovation: appui pedagogique, dotation en "
-            "ressources et suivi de proximite."
+            "Renforcer en urgence cette innovation : appui pédagogique, dotation en "
+            "ressources et suivi de proximité."
         )
     elif score < 60:
         priority = Recommendation.Priority.HIGH
         text = (
-            "Programmer un accompagnement cible pour corriger les contraintes "
-            "signalees et relancer la mise en oeuvre."
+            "Programmer un accompagnement ciblé pour corriger les contraintes "
+            "signalées et relancer la mise en œuvre."
         )
     elif score < 80:
         priority = Recommendation.Priority.MEDIUM
         text = (
             "Poursuivre l'encadrement et consolider les bonnes pratiques avant une "
-            "extension a plus grande echelle."
+            "extension à plus grande échelle."
         )
     else:
         priority = Recommendation.Priority.LOW
         text = (
-            "Maintenir la dynamique actuelle et valoriser cette experience comme "
-            "reference pour les autres ecoles."
+            "Maintenir la dynamique actuelle et valoriser cette expérience comme "
+            "référence pour les autres écoles."
         )
 
     return priority, text
@@ -64,11 +64,11 @@ def build_priority_needs(limit=5, school_queryset=None):
     for school in ranked_schools:
         reasons = []
         if school.total_activities == 0:
-            reasons.append('aucune activite remontee')
+            reasons.append('aucune activité remontée')
         if school.total_evaluations == 0:
-            reasons.append('aucune evaluation disponible')
+            reasons.append('aucune évaluation disponible')
         elif school.avg_score is not None and school.avg_score < 60:
-            reasons.append('performance inferieure au seuil attendu')
+            reasons.append('performance inférieure au seuil attendu')
 
         if reasons:
             priorities.append(

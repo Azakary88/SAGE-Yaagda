@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Activites | DREPPNF Yaagda{% endblock %}
+{% block title %}Activités | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
-        <h1 class="h3 mb-1">Registre des activites</h1>
-        <p class="text-muted mb-0">Consultez les activites declarees dans le cadre des metiers scolaires, des TIC et de l'anglais.</p>
+        <h1 class="h3 mb-1">Registre des activités</h1>
+        <p class="text-muted mb-0">Consultez les activités déclarées dans le cadre des métiers scolaires, des TIC et de l'anglais.</p>
     </div>
     {% if user.can_add_activity %}
-        <a href="{% url 'innovations:activity_create' %}" class="btn btn-success">Enregistrer une activite</a>
+        <a href="{% url 'innovations:activity_create' %}" class="btn btn-success">Enregistrer une activité</a>
     {% endif %}
 </div>
 
@@ -17,8 +17,8 @@
     <div class="card-body">
         <form method="get" class="row g-3 align-items-end">
             <div class="col-md-4">
-                <label class="form-label">Innovation</label>
-                <select name="innovation" class="form-select">
+                <label for="innovation" class="form-label">Innovation</label>
+                <select id="innovation" name="innovation" class="form-select">
                     <option value="">Toutes</option>
                     {% for innovation in innovations %}
                         <option value="{{ innovation.id }}" {% if selected_innovation == innovation.id|stringformat:'s' %}selected{% endif %}>{{ innovation.name }}</option>
@@ -26,8 +26,8 @@
                 </select>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Ecole</label>
-                <select name="school" class="form-select">
+                <label for="school" class="form-label">École</label>
+                <select id="school" name="school" class="form-select">
                     <option value="">Toutes</option>
                     {% for school in schools %}
                         <option value="{{ school.id }}" {% if selected_school == school.id|stringformat:'s' %}selected{% endif %}>{{ school.name }}</option>
@@ -49,7 +49,7 @@
                     <th>Date</th>
                     <th>Province</th>
                     <th>CEB</th>
-                    <th>Ecole</th>
+                    <th>École</th>
                     <th>Innovation</th>
                     <th>Titre</th>
                     <th>Participants</th>
@@ -78,7 +78,7 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="9" class="text-center text-muted py-4">Aucune activite ne correspond aux criteres de consultation.</td>
+                        <td colspan="9" class="text-center text-muted py-4">Aucune activité ne correspond aux critères de consultation.</td>
                     </tr>
                 {% endfor %}
             </tbody>

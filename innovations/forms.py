@@ -29,20 +29,20 @@ class ActivityForm(BootstrapFormMixin, forms.ModelForm):
             'challenges',
         ]
         labels = {
-            'school': 'Ecole',
+            'school': 'École',
             'innovation': 'Innovation',
-            'title': "Titre de l'activite",
+            'title': "Titre de l'activité",
             'reporting_date': 'Date de rapportage',
-            'classes_concerned': 'Classes concernees',
+            'classes_concerned': 'Classes concernées',
             'description': 'Description',
-            'participating_students': 'Effectif des eleves participants',
-            'trained_teachers': "Nombre d'enseignants formes",
-            'taught_hours': "Volume horaire dispense",
-            'computers_count': "Nombre d'ordinateurs mobilises",
-            'has_internet': 'Acces a Internet',
-            'quantity_produced': 'Quantite produite',
+            'participating_students': 'Effectif des élèves participants',
+            'trained_teachers': "Nombre d'enseignants formés",
+            'taught_hours': "Volume horaire dispensé",
+            'computers_count': "Nombre d'ordinateurs mobilisés",
+            'has_internet': 'Accès à Internet',
+            'quantity_produced': 'Quantité produite',
             'available_resources': 'Ressources disponibles',
-            'challenges': 'Contraintes observees',
+            'challenges': 'Contraintes observées',
         }
         widgets = {
             'reporting_date': forms.DateInput(attrs={'type': 'date'}),
@@ -73,7 +73,7 @@ class ActivityForm(BootstrapFormMixin, forms.ModelForm):
             and school.director_id != user.id
         ):
             raise forms.ValidationError(
-                "Vous pouvez uniquement enregistrer une activite pour votre ecole."
+                "Vous pouvez uniquement enregistrer une activité pour votre école."
             )
 
         return school
@@ -84,7 +84,7 @@ class ActivityMediaForm(BootstrapFormMixin, forms.ModelForm):
         model = ActivityMedia
         fields = ['file', 'comment']
         labels = {
-            'file': "Image de l'activite",
+            'file': "Image de l'activité",
             'comment': 'Commentaire',
         }
         widgets = {
@@ -98,8 +98,8 @@ class ActivityMediaForm(BootstrapFormMixin, forms.ModelForm):
 
 class ActivityReportForm(BootstrapFormMixin, forms.Form):
     class ReportKind(models.TextChoices):
-        ACTIVITY = 'ACTIVITY', "Synthese detaillee d'une activite"
-        GENERAL = 'GENERAL', 'Rapport consolide du perimetre'
+        ACTIVITY = 'ACTIVITY', "Synthèse détaillée d'une activité"
+        GENERAL = 'GENERAL', "Rapport consolidé de la zone d'action"
 
     report_kind = forms.ChoiceField(
         label='Type de rapport',
@@ -107,11 +107,11 @@ class ActivityReportForm(BootstrapFormMixin, forms.Form):
         initial=ReportKind.GENERAL,
     )
     activity = forms.ModelChoiceField(
-        label='Activite concernee',
+        label='Activité concernée',
         queryset=Activity.objects.none(),
         required=False,
-        empty_label='Choisir une activite',
-        help_text="Selectionnez une activite pour afficher sa fiche de synthese detaillee.",
+        empty_label='Choisir une activité',
+        help_text="Sélectionnez une activité pour afficher sa fiche de synthèse détaillée.",
     )
 
     def __init__(self, *args, user=None, **kwargs):
@@ -134,7 +134,7 @@ class ActivityReportForm(BootstrapFormMixin, forms.Form):
 
         if report_kind == self.ReportKind.ACTIVITY and not activity:
             raise forms.ValidationError(
-                "Veuillez selectionner une activite pour afficher sa synthese detaillee."
+                "Veuillez sélectionner une activité pour afficher sa synthèse détaillée."
             )
 
         return cleaned_data

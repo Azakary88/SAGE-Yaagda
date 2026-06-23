@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 
 from innovations.forms import ActivityForm
@@ -19,7 +19,7 @@ class UserModelTests(TestCase):
             role=User.Role.REGIONAL_AGENT,
         )
 
-        self.assertIn('Agent regional', str(user))
+        self.assertIn('Agent régional', str(user))
 
 
 class ManagedUserViewTests(TestCase):
@@ -133,6 +133,12 @@ class ManagedUserViewTests(TestCase):
 
 
 class PhonePasswordResetTests(TestCase):
+    def test_root_login_alias_redirects_to_auth_login_page(self):
+        response = self.client.get('/login/')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+
     def test_user_can_reset_password_with_phone_number(self):
         user = User.objects.create_user(
             username='directeur',
@@ -178,6 +184,35 @@ class PhonePasswordResetTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(user.check_password('ancien-pass-123'))
 
+    def test_phone_reset_page_sets_csrf_cookie(self):
+        response = self.client.get(reverse('accounts:phone_password_reset'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('csrftoken', response.cookies)
+
+    def test_invalid_csrf_token_renders_friendly_failure_page(self):
+        client = Client(enforce_csrf_checks=True)
+        response = client.get(reverse('accounts:phone_password_reset'))
+        self.assertIn('csrftoken', response.cookies)
+
+        failed_post = client.post(
+            reverse('accounts:phone_password_reset'),
+            data={
+                'username': 'directeur',
+                'phone_number': '70000000',
+                'new_password1': 'nouveau-pass-456',
+                'new_password2': 'nouveau-pass-456',
+                'csrfmiddlewaretoken': 'jeton-invalide',
+            },
+        )
+
+        self.assertEqual(failed_post.status_code, 403)
+        self.assertContains(
+            failed_post,
+            'Le jeton de sécurité associé au formulaire n&#x27;est plus valide.',
+            status_code=403,
+        )
+
 
 class FrenchFormLabelsTests(TestCase):
     def test_key_forms_use_french_labels(self):
@@ -185,6 +220,6 @@ class FrenchFormLabelsTests(TestCase):
         school_form = SchoolForm()
         activity_form = ActivityForm()
 
-        self.assertEqual(phone_form.fields['phone_number'].label, 'Numero de telephone')
-        self.assertEqual(school_form.fields['student_capacity'].label, "Capacite d'accueil")
+        self.assertEqual(phone_form.fields['phone_number'].label, 'Numéro de téléphone')
+        self.assertEqual(school_form.fields['student_capacity'].label, "Capacité d'accueil")
         self.assertEqual(activity_form.fields['reporting_date'].label, 'Date de rapportage')

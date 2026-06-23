@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ page_title }} | DREPPNF Yaagda{% endblock %}
+{% block title %}{{ page_title }} | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
@@ -27,7 +27,7 @@
     <div class="col-lg-8">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
-                <h2 class="h5 mb-3">Parametres de generation</h2>
+                <h2 class="h5 mb-3">Paramètres de génération</h2>
                 {% if form.non_field_errors %}
                     <div class="alert alert-danger">
                         {% for error in form.non_field_errors %}
@@ -70,11 +70,11 @@
                     <h2 class="h4 mb-1">{{ report_preview.report_title }}</h2>
                     <p class="text-muted mb-0">
                         {{ report_preview.metadata.level_label }} : {{ report_preview.metadata.scope_name }} |
-                        Genere le {{ report_preview.generated_at|date:"d/m/Y H:i" }}
+                        Généré le {{ report_preview.generated_at|date:"d/m/Y H:i" }}
                     </p>
                 </div>
                 {% if pdf_url %}
-                    <a href="{{ pdf_url }}" class="btn btn-outline-success">Telecharger le rapport PDF</a>
+                    <a href="{{ pdf_url }}" class="btn btn-outline-success">Télécharger le rapport PDF</a>
                 {% endif %}
             </div>
             <p class="mb-0">{{ report_preview.summary_text }}</p>
@@ -99,16 +99,16 @@
             <div class="col-lg-5">
                 <div class="card shadow-sm border-0 h-100">
                     <div class="card-body">
-                <h2 class="h5 mb-3">Fiche de l'activite</h2>
+                <h2 class="h5 mb-3">Fiche de l'activité</h2>
                         <p class="mb-2"><strong>Titre :</strong> {{ report_preview.activity.title }}</p>
-                        <p class="mb-2"><strong>Ecole :</strong> {{ report_preview.activity.school.name }}</p>
+                        <p class="mb-2"><strong>École :</strong> {{ report_preview.activity.school.name }}</p>
                         <p class="mb-2"><strong>Province :</strong> {{ report_preview.activity.school.province.name }}</p>
                         <p class="mb-2"><strong>CEB :</strong> {{ report_preview.activity.school.ceb.name }}</p>
                         <p class="mb-2"><strong>Innovation :</strong> {{ report_preview.activity.innovation.name }}</p>
                         <p class="mb-2"><strong>Date :</strong> {{ report_preview.activity.reporting_date }}</p>
-                        <p class="mb-2"><strong>Classes concernees :</strong> {{ report_preview.activity.classes_concerned|default:'Non renseignees' }}</p>
+                        <p class="mb-2"><strong>Classes concernées :</strong> {{ report_preview.activity.classes_concerned|default:'Non renseignées' }}</p>
                         <p class="mb-2"><strong>Internet :</strong> {{ report_preview.activity.has_internet|yesno:'Oui,Non' }}</p>
-                        <p class="mb-0"><strong>Quantite produite :</strong> {{ report_preview.activity.quantity_produced }}</p>
+                        <p class="mb-0"><strong>Quantité produite :</strong> {{ report_preview.activity.quantity_produced }}</p>
                     </div>
                 </div>
             </div>
@@ -119,9 +119,9 @@
                         <h3 class="h6 text-uppercase text-muted">Description</h3>
                         <p>{{ report_preview.activity.description|default:'Aucune description saisie.' }}</p>
                         <h3 class="h6 text-uppercase text-muted mt-4">Ressources disponibles</h3>
-                        <p>{{ report_preview.activity.available_resources|default:'Aucune ressource renseignee.' }}</p>
+                        <p>{{ report_preview.activity.available_resources|default:'Aucune ressource renseignée.' }}</p>
                         <h3 class="h6 text-uppercase text-muted mt-4">Contraintes</h3>
-                        <p class="mb-0">{{ report_preview.activity.challenges|default:'Aucune contrainte signalee.' }}</p>
+                        <p class="mb-0">{{ report_preview.activity.challenges|default:'Aucune contrainte signalée.' }}</p>
                     </div>
                 </div>
             </div>
@@ -129,15 +129,15 @@
 
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
-                <h2 class="h5 mb-3">Evaluations liees</h2>
+                <h2 class="h5 mb-3">Évaluations liées</h2>
                 <div class="table-responsive">
                     <table class="table align-middle">
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Evaluateur</th>
+                                <th>Évaluateur</th>
                                 <th>Score</th>
-                                <th>Resultats observes</th>
+                                <th>Résultats observés</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -146,11 +146,11 @@
                                     <td>{{ evaluation.evaluation_date }}</td>
                                     <td>{{ evaluation.evaluator.get_full_name|default:evaluation.evaluator.username|default:'-' }}</td>
                                     <td>{{ evaluation.performance_score|floatformat:1 }}/100</td>
-                                    <td>{{ evaluation.observed_results|default:'Aucun detail fourni.' }}</td>
+                                    <td>{{ evaluation.observed_results|default:'Aucun détail fourni.' }}</td>
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="4" class="text-muted text-center py-4">Aucune evaluation liee a cette activite.</td>
+                                    <td colspan="4" class="text-muted text-center py-4">Aucune évaluation liée à cette activité.</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -161,7 +161,7 @@
 
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
-                <h2 class="h5 mb-3">Recommandations associees</h2>
+                <h2 class="h5 mb-3">Recommandations associées</h2>
                 <div class="list-group list-group-flush">
                     {% for recommendation in report_preview.recommendations %}
                         <div class="list-group-item px-0">
@@ -182,7 +182,7 @@
 
         <div class="card shadow-sm border-0">
             <div class="card-body">
-                <h2 class="h5 mb-3">Pieces justificatives et commentaires</h2>
+                <h2 class="h5 mb-3">Pièces justificatives et commentaires</h2>
                 <div class="row g-3">
                     {% for media in report_preview.media_items %}
                         <div class="col-md-6 col-xl-4">
@@ -198,7 +198,7 @@
                             </div>
                         </div>
                     {% empty %}
-                        <p class="text-muted mb-0">Aucune image televersee pour cette activite.</p>
+                        <p class="text-muted mb-0">Aucune image téléversée pour cette activité.</p>
                     {% endfor %}
                 </div>
             </div>
@@ -208,13 +208,13 @@
             <div class="col-lg-6">
                 <div class="card shadow-sm border-0 h-100">
                     <div class="card-body">
-                        <h2 class="h5 mb-3">Synthese par innovation</h2>
+                        <h2 class="h5 mb-3">Synthèse par innovation</h2>
                         <div class="table-responsive">
                             <table class="table align-middle">
                                 <thead>
                                     <tr>
                                         <th>Innovation</th>
-                                        <th>Activites</th>
+                                        <th>Activités</th>
                                         <th>Enseignants</th>
                                         <th>Heures</th>
                                         <th>Score moyen</th>
@@ -237,7 +237,7 @@
                                         </tr>
                                     {% empty %}
                                         <tr>
-                                            <td colspan="5" class="text-muted text-center py-4">Aucune activite visible.</td>
+                                            <td colspan="5" class="text-muted text-center py-4">Aucune activité visible.</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
@@ -255,7 +255,7 @@
                                 <thead>
                                     <tr>
                                         <th>{{ report_preview.comparison_column_label }}</th>
-                                        <th>Activites</th>
+                                        <th>Activités</th>
                                         <th>Images</th>
                                         <th>Score moyen</th>
                                     </tr>
@@ -291,7 +291,7 @@
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <div class="small text-muted">Evaluations liees</div>
+                        <div class="small text-muted">Évaluations liées</div>
                         <div class="fw-semibold">{{ report_preview.evaluations_total }}</div>
                     </div>
                     <div class="col-md-3">
@@ -299,11 +299,11 @@
                         <div class="fw-semibold">{{ report_preview.recommendations_total }}</div>
                     </div>
                     <div class="col-md-3">
-                        <div class="small text-muted">Heures dispensees</div>
+                        <div class="small text-muted">Heures dispensées</div>
                         <div class="fw-semibold">{{ report_preview.hours_total }}</div>
                     </div>
                     <div class="col-md-3">
-                        <div class="small text-muted">Ordinateurs mobilises</div>
+                        <div class="small text-muted">Ordinateurs mobilisés</div>
                         <div class="fw-semibold">{{ report_preview.computers_total }}</div>
                     </div>
                 </div>
@@ -312,7 +312,7 @@
 
         <div class="card shadow-sm border-0">
             <div class="card-body">
-                <h2 class="h5 mb-3">Releve detaille des activites du perimetre</h2>
+                <h2 class="h5 mb-3">Relevé détaillé des activités de la zone d'action</h2>
                 <div class="table-responsive">
                     <table class="table align-middle">
                         <thead>
@@ -320,7 +320,7 @@
                                 <th>Date</th>
                                 <th>Province</th>
                                 <th>CEB</th>
-                                <th>Ecole</th>
+                                <th>École</th>
                                 <th>Innovation</th>
                                 <th>Titre</th>
                                 <th>Participants</th>
@@ -353,7 +353,7 @@
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="9" class="text-muted text-center py-4">Aucune activite visible.</td>
+                                <td colspan="9" class="text-muted text-center py-4">Aucune activité visible.</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -361,10 +361,35 @@
                 </div>
             </div>
         </div>
+
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Galerie des images justificatives</h2>
+                <div class="row g-3">
+                    {% for media in report_preview.media_items %}
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card h-100 border-0 bg-light">
+                                <img src="{{ media.file.url }}" class="card-img-top" alt="{{ media.activity.title }}">
+                                <div class="card-body">
+                                    <div class="small text-muted mb-2">
+                                        {{ media.created_at|date:"d/m/Y H:i" }}
+                                        {% if media.activity %}| {{ media.activity.school.name }} - {{ media.activity.title }}{% endif %}
+                                        {% if media.uploaded_by %}<br>{{ media.uploaded_by.get_full_name|default:media.uploaded_by.username }}{% endif %}
+                                    </div>
+                                    <p class="mb-0">{{ media.comment|default:'Aucun commentaire.' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted mb-0">Aucune image téléversée n'est disponible dans cette zone d'action.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     {% endif %}
 {% elif has_query %}
     <div class="alert alert-warning">
-        Le rapport n'a pas pu etre prepare a partir des parametres fournis.
+        Le rapport n'a pas pu être préparé à partir des paramètres fournis.
     </div>
 {% endif %}
 {% endblock %}

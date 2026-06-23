@@ -38,16 +38,16 @@ def _score(value):
 def _ai_titles_for_role(role):
     if role == User.Role.SCHOOL_DIRECTOR:
         return {
-            'title': "Analyse IA de votre ecole",
+            'title': "Analyse IA de votre école",
             'subtitle': (
-                "Le module d'analyse classe votre ecole selon le niveau de risque observe "
-                "a partir des activites, des evaluations et des recommandations."
+                "Le module d'analyse classe votre école selon le niveau de risque observé "
+                "à partir des activités, des évaluations et des recommandations."
             ),
         }
     return {
-        'title': 'Analyse IA des ecoles de votre perimetre',
+        'title': "Analyse IA des écoles de votre zone d'action",
         'subtitle': (
-            "Le module d'analyse regroupe les ecoles par profils de risque et priorise "
+            "Le module d'analyse regroupe les écoles par profils de risque et priorise "
             "les actions d'accompagnement."
         ),
     }
@@ -147,24 +147,24 @@ def home(request):
             {
                 'dashboard_level': 'province',
                 'dashboard_title': (
-                    'Tableau de pilotage regional'
+                    'Tableau de pilotage régional'
                     if role == User.Role.REGIONAL_AGENT
                     else 'Tableau de pilotage administrateur'
                 ),
                 'dashboard_intro': (
-                    'Vision consolidee des provinces, des agents provinciaux et des activites '
-                    "relevees dans l'ensemble de votre perimetre."
+                    'Vision consolidée des provinces, des agents provinciaux et des activités '
+                    "relevées dans l'ensemble de votre zone d'action."
                 ),
                 'primary_metric_label': 'Provinces suivies',
                 'primary_metric_value': len(province_rows),
-                'secondary_metric_label': 'Activites',
+                'secondary_metric_label': 'Activités',
                 'secondary_metric_value': activities_total,
-                'tertiary_metric_label': 'Provinces evaluees',
+                'tertiary_metric_label': 'Provinces évaluées',
                 'tertiary_metric_value': province_evaluations_total,
                 'quaternary_metric_label': 'Taux de couverture',
                 'quaternary_metric_value': f'{coverage_rate}%',
                 'comparison_title': 'Comparaison des provinces',
-                'comparison_value_label': "Nombre d'activites",
+                'comparison_value_label': "Nombre d'activités",
                 'comparison_score_label': 'Score moyen',
                 'comparison_chart_labels': json.dumps([province.name for province in province_rows]),
                 'comparison_chart_values': json.dumps(
@@ -194,19 +194,19 @@ def home(request):
                 'dashboard_level': 'ceb',
                 'dashboard_title': 'Tableau de pilotage provincial',
                 'dashboard_intro': (
-                    'Vision consolidee des CEB de votre province, du suivi des encadreurs '
-                    'pedagogiques et des evaluations administratives realisees.'
+                    'Vision consolidée des CEB de votre province, du suivi des encadreurs '
+                    'pédagogiques et des évaluations administratives réalisées.'
                 ),
                 'primary_metric_label': 'CEB suivies',
                 'primary_metric_value': len(ceb_rows),
-                'secondary_metric_label': 'Activites',
+                'secondary_metric_label': 'Activités',
                 'secondary_metric_value': activities_total,
-                'tertiary_metric_label': 'CEB evaluees',
+                'tertiary_metric_label': 'CEB évaluées',
                 'tertiary_metric_value': ceb_evaluations_total,
                 'quaternary_metric_label': 'Taux de couverture',
                 'quaternary_metric_value': f'{coverage_rate}%',
                 'comparison_title': 'Comparaison des CEB de la province',
-                'comparison_value_label': "Nombre d'activites",
+                'comparison_value_label': "Nombre d'activités",
                 'comparison_score_label': 'Score moyen',
                 'comparison_chart_labels': json.dumps([ceb.name for ceb in ceb_rows]),
                 'comparison_chart_values': json.dumps([ceb.total_activities for ceb in ceb_rows]),
@@ -235,19 +235,19 @@ def home(request):
                 'dashboard_level': 'school',
                 'dashboard_title': 'Tableau de pilotage de la CEB',
                 'dashboard_intro': (
-                    "Vision consolidee des ecoles de votre CEB, du suivi des directeurs "
-                    "d'ecole et des evaluations administratives realisees."
+                    "Vision consolidée des écoles de votre CEB, du suivi des directeurs "
+                    "d'école et des évaluations administratives réalisées."
                 ),
-                'primary_metric_label': 'Ecoles suivies',
+                'primary_metric_label': 'Écoles suivies',
                 'primary_metric_value': len(school_rows),
-                'secondary_metric_label': 'Activites',
+                'secondary_metric_label': 'Activités',
                 'secondary_metric_value': activities_total,
-                'tertiary_metric_label': 'Ecoles evaluees',
+                'tertiary_metric_label': 'Écoles évaluées',
                 'tertiary_metric_value': school_evaluations_total,
                 'quaternary_metric_label': 'Taux de couverture',
                 'quaternary_metric_value': f'{coverage_rate}%',
-                'comparison_title': 'Comparaison des ecoles de la CEB',
-                'comparison_value_label': "Nombre d'activites",
+                'comparison_title': 'Comparaison des écoles de la CEB',
+                'comparison_value_label': "Nombre d'activités",
                 'comparison_score_label': 'Score administratif',
                 'comparison_chart_labels': json.dumps([school.name for school in school_rows]),
                 'comparison_chart_values': json.dumps(
@@ -278,22 +278,22 @@ def home(request):
         context.update(
             {
                 'dashboard_level': 'director',
-                'dashboard_title': "Tableau de suivi du directeur d'ecole",
+                'dashboard_title': "Tableau de suivi du directeur d'école",
                 'dashboard_intro': (
-                    f"Suivi operationnel des activites declarees par {director_school.name}."
+                    f"Suivi opérationnel des activités déclarées par {director_school.name}."
                     if director_school
-                    else "Suivi operationnel des activites declarees par votre ecole."
+                    else "Suivi opérationnel des activités déclarées par votre école."
                 ),
-                'primary_metric_label': 'Activites',
+                'primary_metric_label': 'Activités',
                 'primary_metric_value': activities_total,
-                'secondary_metric_label': 'Images televersees',
+                'secondary_metric_label': 'Images téléversées',
                 'secondary_metric_value': media_total,
-                'tertiary_metric_label': 'Eleves touches',
+                'tertiary_metric_label': 'Élèves touchés',
                 'tertiary_metric_value': participants_total,
-                'quaternary_metric_label': 'Evaluations innovation',
+                'quaternary_metric_label': 'Évaluations innovation',
                 'quaternary_metric_value': innovation_evaluations_total,
-                'comparison_title': 'Repartition des activites par innovation',
-                'comparison_value_label': "Nombre d'activites",
+                'comparison_title': 'Répartition des activités par innovation',
+                'comparison_value_label': "Nombre d'activités",
                 'comparison_score_label': '',
                 'comparison_chart_labels': json.dumps([item['innovation__name'] for item in innovation_stats]),
                 'comparison_chart_values': json.dumps([item['total'] for item in innovation_stats]),
@@ -315,7 +315,7 @@ def ai_analysis(request):
     context['page_title'] = "Module d'analyse IA"
     context['page_intro'] = (
         "Consultez le fonctionnement du module intelligent, les scores de confiance "
-        "et les priorites d'accompagnement proposees."
+        "et les priorités d'accompagnement proposées."
     )
     return render(request, 'dashboard/ai_analysis.html', context)
 
@@ -338,11 +338,11 @@ def ai_analysis_pdf(request):
     story = [
         Paragraph("DREPPNF Yaagda - Rapport d'analyse IA", styles['Title']),
         Spacer(1, 0.3 * cm),
-        Paragraph(f"Perimetre : {context['ai_title']}", styles['Heading2']),
+        Paragraph(f"Zone d'action : {context['ai_title']}", styles['Heading2']),
         Paragraph(context['ai_subtitle'], styles['BodyText']),
         Spacer(1, 0.2 * cm),
         Paragraph(
-            f"Date de generation : {timezone.localtime().strftime('%d/%m/%Y %H:%M')}",
+            f"Date de génération : {timezone.localtime().strftime('%d/%m/%Y %H:%M')}",
             styles['BodyText'],
         ),
         Spacer(1, 0.4 * cm),
@@ -352,8 +352,8 @@ def ai_analysis_pdf(request):
     summary_table = Table(
         [
             ['Moteur', ai_analysis['engine_name']],
-            ["Ecoles analysees", str(summary['total_schools'])],
-            ['Risque eleve', str(summary['high_risk'])],
+            ["Écoles analysées", str(summary['total_schools'])],
+            ['Risque élevé', str(summary['high_risk'])],
             ['Suivi prioritaire', str(summary['monitored'])],
             ['Bonne dynamique', str(summary['healthy'])],
             ['Confiance moyenne', f"{summary.get('avg_confidence', 0)}/100"],
@@ -373,7 +373,7 @@ def ai_analysis_pdf(request):
     )
     story.extend(
         [
-            Paragraph("Synthese de l'analyse", styles['Heading2']),
+            Paragraph("Synthèse de l'analyse", styles['Heading2']),
             summary_table,
             Spacer(1, 0.4 * cm),
         ]
@@ -382,25 +382,25 @@ def ai_analysis_pdf(request):
     if ai_analysis['enabled']:
         story.extend(
             [
-                Paragraph('Presentation du modele', styles['Heading2']),
+                Paragraph('Présentation du modèle', styles['Heading2']),
                 Paragraph(ai_analysis['methodology']['description'], styles['BodyText']),
                 Paragraph(ai_analysis['methodology']['target'], styles['BodyText']),
                 Paragraph(ai_analysis['methodology']['confidence_rule'], styles['BodyText']),
                 Spacer(1, 0.2 * cm),
                 Paragraph(
-                    'Variables utilisees : ' + ', '.join(ai_analysis['methodology']['features']) + '.',
+                    'Variables utilisées : ' + ', '.join(ai_analysis['methodology']['features']) + '.',
                     styles['BodyText'],
                 ),
                 Spacer(1, 0.4 * cm),
-                Paragraph("Priorites identifiees", styles['Heading2']),
+                Paragraph("Priorités identifiées", styles['Heading2']),
             ]
         )
     else:
         story.extend(
             [
-                Paragraph('Presentation du modele', styles['Heading2']),
+                Paragraph('Présentation du modèle', styles['Heading2']),
                 Paragraph(
-                    "Le rapport ne contient pas encore suffisamment de donnees pour produire une analyse IA detaillee.",
+                    "Le rapport ne contient pas encore suffisamment de données pour produire une analyse IA détaillée.",
                     styles['BodyText'],
                 ),
                 Spacer(1, 0.4 * cm),
@@ -409,11 +409,11 @@ def ai_analysis_pdf(request):
 
     insight_rows = [
         [
-            'Ecole',
+            'École',
             'Profil IA',
             'Risque',
             'Confiance',
-            'Action recommande',
+            'Action recommandée',
         ]
     ]
     for insight in ai_analysis['insights'][:20]:
@@ -431,7 +431,7 @@ def ai_analysis_pdf(request):
         )
 
     if len(insight_rows) == 1:
-        insight_rows.append(['Aucune ecole visible', '-', '-', '-', '-'])
+        insight_rows.append(['Aucune école visible', '-', '-', '-', '-'])
 
     insights_table = Table(
         insight_rows,

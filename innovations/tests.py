@@ -8,6 +8,13 @@ from schools.models import CEB, Province, Region, School
 from .models import Activity, ActivityMedia, Evaluation, Innovation
 
 
+VALID_GIF_BYTES = (
+    b'GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff!'
+    b'\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00'
+    b'\x00\x02\x02D\x01\x00;'
+)
+
+
 class EvaluationTests(TestCase):
     def test_performance_score_is_computed_automatically(self):
         region = Region.objects.create(code='YAAG', name='Yaagda')
@@ -81,7 +88,7 @@ class ActivityPermissionTests(TestCase):
         )
 
     def _sample_image(self, name='photo.jpg'):
-        return SimpleUploadedFile(name, b'fake-image-content', content_type='image/jpeg')
+        return SimpleUploadedFile(name, VALID_GIF_BYTES, content_type='image/gif')
 
     def test_school_director_can_create_activity_for_managed_school(self):
         self.client.login(username='directeur', password='test-pass-123')
@@ -239,6 +246,9 @@ class ActivityPermissionTests(TestCase):
 
 
 class ActivityReportTests(TestCase):
+    def _sample_image(self, name='report.gif'):
+        return SimpleUploadedFile(name, VALID_GIF_BYTES, content_type='image/gif')
+
     def setUp(self):
         self.region = Region.objects.create(code='YAAG', name='Yaagda')
         self.other_region = Region.objects.create(code='EST', name='Est')
@@ -360,6 +370,12 @@ class ActivityReportTests(TestCase):
             taught_hours=1,
             created_by=self.director_ext,
         )
+        self.activity_a1_media = ActivityMedia.objects.create(
+            activity=self.activity_a1,
+            file=self._sample_image(),
+            comment='Illustration de l activite',
+            uploaded_by=self.director_a1,
+        )
 
     def test_school_director_report_form_is_limited_to_own_activity(self):
         self.client.login(username='directeur-a1', password='test-pass-123')
@@ -378,8 +394,10 @@ class ActivityReportTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Rapport de synthese')
+        self.assertContains(response, 'Rapport de synthèse')
         self.assertContains(response, 'Activite A1')
+        self.assertContains(response, self.activity_a1_media.file.url)
+        self.assertContains(response, 'Illustration de l activite')
         self.assertNotContains(response, 'Activite A2')
         self.assertNotContains(response, 'Activite Externe')
 
@@ -392,7 +410,7 @@ class ActivityReportTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Comparaison des ecoles de la CEB')
+        self.assertContains(response, 'Comparaison des écoles de la CEB')
         self.assertContains(response, 'Activite A1')
         self.assertNotContains(response, 'Activite A2')
         self.assertNotContains(response, 'Activite B1')
@@ -414,7 +432,7 @@ class ActivityReportTests(TestCase):
         self.assertNotContains(response, 'Activite Externe')
 
         metric_labels = [item['label'] for item in response.context['report_preview']['metrics']]
-        self.assertNotIn('Eleves touches', metric_labels)
+        self.assertNotIn('Élèves touchés', metric_labels)
         self.assertIn('Innovations suivies', metric_labels)
 
     def test_regional_agent_general_report_is_limited_to_his_region(self):
@@ -443,3 +461,15 @@ class ActivityReportTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertIn('attachment;', response['Content-Disposition'])
+
+    def test_activity_report_pdf_embeds_uploaded_image(self):
+        self.client.login(username='directeur-a1', password='test-pass-123')
+
+        response = self.client.get(
+            reverse('innovations:activity_report_pdf'),
+            data={'report_kind': 'ACTIVITY', 'activity': self.activity_a1.id},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertIn(b'/Subtype /Image', response.content)

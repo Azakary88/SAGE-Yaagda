@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ activity.title }} | DREPPNF Yaagda{% endblock %}
+{% block title %}{{ activity.title }} | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
@@ -11,7 +11,7 @@
         </p>
     </div>
     <div class="d-flex flex-wrap gap-2">
-        <a href="{% url 'innovations:activity_report' %}?report_kind=ACTIVITY&activity={{ activity.id }}" class="btn btn-outline-success">Generer le rapport</a>
+        <a href="{% url 'innovations:activity_report' %}?report_kind=ACTIVITY&activity={{ activity.id }}" class="btn btn-outline-success">Générer le rapport</a>
         {% if can_manage_activity_here %}
             <a href="{% url 'innovations:activity_update' activity.id %}" class="btn btn-outline-secondary">Modifier</a>
             <a href="{% url 'innovations:activity_delete' activity.id %}" class="btn btn-outline-danger">Supprimer</a>
@@ -24,12 +24,12 @@
     <div class="col-lg-4">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
-                <h2 class="h6 text-uppercase text-muted">Fiche de l'activite</h2>
+                <h2 class="h6 text-uppercase text-muted">Fiche de l'activité</h2>
                 <p class="mb-2"><strong>Date :</strong> {{ activity.reporting_date }}</p>
-                <p class="mb-2"><strong>Classes concernees :</strong> {{ activity.classes_concerned|default:'Non renseignees' }}</p>
+                <p class="mb-2"><strong>Classes concernées :</strong> {{ activity.classes_concerned|default:'Non renseignées' }}</p>
                 <p class="mb-2"><strong>Participants :</strong> {{ activity.participating_students }}</p>
-                <p class="mb-2"><strong>Enseignants formes :</strong> {{ activity.trained_teachers }}</p>
-                <p class="mb-2"><strong>Heures dispensees :</strong> {{ activity.taught_hours }}</p>
+                <p class="mb-2"><strong>Enseignants formés :</strong> {{ activity.trained_teachers }}</p>
+                <p class="mb-2"><strong>Heures dispensées :</strong> {{ activity.taught_hours }}</p>
                 <p class="mb-2"><strong>Ordinateurs :</strong> {{ activity.computers_count }}</p>
                 <p class="mb-0"><strong>Internet :</strong> {{ activity.has_internet|yesno:'Oui,Non' }}</p>
             </div>
@@ -41,9 +41,9 @@
                 <h2 class="h6 text-uppercase text-muted">Description</h2>
                 <p>{{ activity.description|default:'Aucune description saisie.' }}</p>
                 <h3 class="h6 text-uppercase text-muted mt-4">Ressources disponibles</h3>
-                <p>{{ activity.available_resources|default:'Aucune ressource indiquee.' }}</p>
-                <h3 class="h6 text-uppercase text-muted mt-4">Contraintes observees</h3>
-                <p class="mb-0">{{ activity.challenges|default:'Aucune contrainte signalee.' }}</p>
+                <p>{{ activity.available_resources|default:'Aucune ressource indiquée.' }}</p>
+                <h3 class="h6 text-uppercase text-muted mt-4">Contraintes observées</h3>
+                <p class="mb-0">{{ activity.challenges|default:'Aucune contrainte signalée.' }}</p>
             </div>
         </div>
     </div>
@@ -54,7 +54,7 @@
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
             <h2 class="h5 mb-0">Galerie et commentaires</h2>
             {% if can_manage_activity_here %}
-                <span class="small text-muted">Les medias ajoutes ici restent visibles pour tous les utilisateurs autorises sur cette activite.</span>
+                <span class="small text-muted">Les médias ajoutés ici restent visibles pour tous les utilisateurs autorisés sur cette activité.</span>
             {% endif %}
         </div>
         {% if can_manage_activity_here %}
@@ -111,7 +111,7 @@
                     </div>
                 </div>
             {% empty %}
-                <p class="text-muted mb-0">Aucun media n'a encore ete associe a cette activite.</p>
+                <p class="text-muted mb-0">Aucun média n'a encore été associé à cette activité.</p>
             {% endfor %}
         </div>
     </div>

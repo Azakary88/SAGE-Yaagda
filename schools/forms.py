@@ -12,7 +12,7 @@ class ProvinceForm(BootstrapFormMixin, forms.ModelForm):
         model = Province
         fields = ['region', 'code', 'name']
         labels = {
-            'region': 'Region',
+            'region': 'Région',
             'code': 'Code de la province',
             'name': 'Nom de la province',
         }
@@ -53,14 +53,14 @@ class SchoolForm(BootstrapFormMixin, forms.ModelForm):
             'student_capacity',
         ]
         labels = {
-            'code': "Code de l'ecole",
-            'name': "Nom de l'ecole",
+            'code': "Code de l'école",
+            'name': "Nom de l'école",
             'province': 'Province',
             'ceb': 'CEB',
-            'school_type': "Type d'ecole",
+            'school_type': "Type d'école",
             'status': 'Statut',
-            'locality': 'Localite',
-            'student_capacity': "Capacite d'accueil",
+            'locality': 'Localité',
+            'student_capacity': "Capacité d'accueil",
         }
         widgets = {
             'student_capacity': forms.NumberInput(attrs={'min': 0}),
@@ -84,7 +84,7 @@ class SchoolForm(BootstrapFormMixin, forms.ModelForm):
         ceb = cleaned_data.get('ceb')
 
         if province and ceb and ceb.province_id != province.id:
-            self.add_error('ceb', 'La CEB selectionnee ne correspond pas a la province renseignee.')
+            self.add_error('ceb', 'La CEB sélectionnée ne correspond pas à la province renseignée.')
         if (
             self.user
             and self.user.role == User.Role.PEDAGOGICAL_SUPERVISOR
@@ -92,7 +92,7 @@ class SchoolForm(BootstrapFormMixin, forms.ModelForm):
             and ceb
             and ceb.id != self.user.ceb_id
         ):
-            self.add_error('ceb', "Vous pouvez uniquement gerer les ecoles rattachees a votre CEB.")
+            self.add_error('ceb', "Vous pouvez uniquement gérer les écoles rattachées à votre CEB.")
 
         return cleaned_data
 
@@ -109,9 +109,9 @@ class BaseAdministrativeEvaluationForm(BootstrapFormMixin, forms.ModelForm):
             'recommendations',
         ]
         labels = {
-            'evaluation_date': "Date d'evaluation",
+            'evaluation_date': "Date d'évaluation",
             'planning_score': 'Score de planification',
-            'execution_score': "Score d'execution",
+            'execution_score': "Score d'exécution",
             'reporting_score': 'Score de rapportage',
             'strengths': 'Points forts',
             'constraints': 'Contraintes',
@@ -164,7 +164,7 @@ class SchoolAdministrativeEvaluationForm(BaseAdministrativeEvaluationForm):
         fields = ['school'] + BaseAdministrativeEvaluationForm.Meta.fields
         labels = {
             **BaseAdministrativeEvaluationForm.Meta.labels,
-            'school': 'Ecole',
+            'school': 'École',
         }
 
     def __init__(self, *args, user=None, **kwargs):

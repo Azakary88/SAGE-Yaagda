@@ -78,10 +78,143 @@ body {
     color: #198754;
 }
 
+.dashboard-toolbar-frame {
+    display: flex;
+    flex: 1 1 42rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(25, 135, 84, 0.28);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1.2rem rgba(32, 49, 38, 0.07);
+}
+
+.dashboard-toolbar-frame .btn {
+    display: inline-flex;
+    min-width: 11.5rem;
+    min-height: 2.45rem;
+    align-items: center;
+    justify-content: center;
+    border-color: #198754;
+    background: #198754;
+    color: #fff;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.dashboard-toolbar-frame .btn:hover,
+.dashboard-toolbar-frame .btn:focus {
+    border-color: #146c43;
+    background: #146c43;
+    color: #fff;
+}
+
+.dashboard-toolbar-frame .btn:active {
+    border-color: #0f5132;
+    background: #0f5132;
+    color: #fff;
+}
+
+.dashboard-action-frame {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.65rem;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(25, 135, 84, 0.18);
+    border-radius: 0.35rem;
+    box-shadow: 0 0.5rem 1.25rem rgba(32, 49, 38, 0.08);
+}
+
+.dashboard-action-frame-sm {
+    gap: 0.4rem;
+    padding: 0.45rem;
+    border-radius: 0.3rem;
+    box-shadow: 0 0.35rem 0.9rem rgba(32, 49, 38, 0.06);
+}
+
+.dashboard-table-actions {
+    max-width: 100%;
+    justify-content: flex-start;
+    background: #fbfdf9;
+}
+
+.dashboard-table-actions .btn {
+    white-space: nowrap;
+}
+
+.dashboard-chart-compact {
+    max-width: 23rem;
+    margin: 0 auto;
+}
+
+.dashboard-chart-compact canvas {
+    max-height: 17rem;
+}
+
 .login-page {
     background:
         radial-gradient(circle at top left, rgba(25, 135, 84, 0.18), transparent 35%),
         linear-gradient(160deg, #f5f8f1 0%, #edf3e7 100%);
+}
+
+.login-card {
+    max-width: 58rem;
+    min-height: 25rem;
+    margin: 0 auto;
+}
+
+.login-visual-panel {
+    position: relative;
+    min-height: 25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.login-visual {
+    width: 100%;
+    height: 100%;
+    min-height: 25rem;
+    object-fit: cover;
+}
+
+.login-logo-visual {
+    padding: 1.5rem;
+    object-fit: contain;
+}
+
+.login-visual-caption {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    padding: 1rem;
+    background: rgba(14, 45, 28, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 0.5rem;
+    color: #fff;
+}
+
+.login-form-panel {
+    display: flex;
+    min-height: 25rem;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-brand-name {
+    color: #198754;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
 }
 
 .card {
@@ -112,5 +245,39 @@ body {
     .navbar .dropdown-menu {
         min-width: 100%;
         margin-top: 0.25rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .dashboard-toolbar-frame {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .dashboard-toolbar-frame .btn {
+        flex: 1 1 auto;
+    }
+
+    .dashboard-action-frame {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .dashboard-action-frame .btn {
+        flex: 1 1 auto;
+    }
+
+    .login-brand-name {
+        font-size: 1.65rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .login-visual {
+        min-height: 18rem;
+    }
+
+    .login-form-panel {
+        min-height: auto;
     }
 }

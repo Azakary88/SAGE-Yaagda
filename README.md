@@ -1,24 +1,32 @@
-# DREPPNF Yaagda Platform
+# SAGA YAADGA
 
-Base de developpement Django pour une plateforme intelligente de suivi et d'evaluation
-des innovations educatives (metiers scolaires, TIC et anglais).
+Système d'accompagnement et de gestion des activités éducatives du Yaadga.
+
+Base Django pour une plateforme intelligente de suivi et d'evaluation des innovations
+educatives (metiers scolaires, TIC et anglais).
 
 ## Demarrage rapide
 
-1. Creer la base locale:
+1. Configurer la base MySQL:
+   `$env:MYSQL_DATABASE='saga_yaadga'`
+   `$env:MYSQL_USER='root'`
+   `$env:MYSQL_PASSWORD='mot_de_passe'`
+   `$env:MYSQL_HOST='127.0.0.1'`
+   `$env:MYSQL_PORT='3306'`
+2. Creer les tables:
    `python manage.py migrate`
-2. Creer un compte administrateur:
+3. Creer un compte administrateur:
    `python manage.py createsuperuser`
-3. Lancer le serveur:
+4. Lancer le serveur:
    `python manage.py runserver`
 
 ## Notes techniques
 
-- La configuration par defaut utilise SQLite pour accelerer le developpement.
-- Si les variables `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_HOST`
-  et `MYSQL_PORT` sont definies, le projet bascule automatiquement sur MySQL.
-- Si votre dossier de travail est synchronise par OneDrive, vous pouvez definir
-  `SQLITE_PATH` vers un chemin local classique pour eviter les erreurs d'ecriture.
+- La configuration utilise MySQL lorsque `MYSQL_DATABASE` est defini.
+- Pour un test local rapide sans MySQL, definir `USE_SQLITE=1`.
+- Si le mode SQLite est utilise dans un dossier synchronise par OneDrive, vous
+  pouvez definir `SQLITE_PATH` vers un chemin local classique pour eviter les
+  erreurs d'ecriture.
 - Les recommandations automatiques sont generees a partir des evaluations via un
   mecanisme de signaux Django.
 - Le module IA du tableau de bord analyse les ecoles a partir des activites,

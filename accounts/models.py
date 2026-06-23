@@ -7,10 +7,10 @@ from schools.models import CEB, Province, Region
 class User(AbstractUser):
     class Role(models.TextChoices):
         ADMINISTRATOR = 'ADMINISTRATOR', 'Administrateur'
-        REGIONAL_AGENT = 'REGIONAL_AGENT', 'Agent regional'
+        REGIONAL_AGENT = 'REGIONAL_AGENT', 'Agent régional'
         PROVINCIAL_USER = 'PROVINCIAL_USER', 'Utilisateur provincial'
-        PEDAGOGICAL_SUPERVISOR = 'PEDAGOGICAL_SUPERVISOR', 'Encadreur pedagogique'
-        SCHOOL_DIRECTOR = 'SCHOOL_DIRECTOR', "Directeur d'ecole"
+        PEDAGOGICAL_SUPERVISOR = 'PEDAGOGICAL_SUPERVISOR', 'Encadreur pédagogique'
+        SCHOOL_DIRECTOR = 'SCHOOL_DIRECTOR', "Directeur d'école"
 
     role = models.CharField(
         max_length=32,

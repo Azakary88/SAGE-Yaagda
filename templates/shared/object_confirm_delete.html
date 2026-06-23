@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ form_title }} | DREPPNF Yaagda{% endblock %}
+{% block title %}{{ form_title }} | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -12,7 +12,7 @@
                     <p class="text-muted">{{ form_intro }}</p>
                 {% endif %}
                 <p class="mb-4">
-                    Vous etes sur le point de supprimer definitivement : <strong>{{ object }}</strong>.
+                    Vous êtes sur le point de supprimer définitivement : <strong>{{ object }}</strong>.
                 </p>
                 <form method="post" class="d-flex flex-wrap gap-2">
                     {% csrf_token %}

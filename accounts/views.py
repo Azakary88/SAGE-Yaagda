@@ -38,7 +38,7 @@ class ManagedUserListView(ListView):
 class ProvincialUserListView(RoleRequiredMixin, ManagedUserListView):
     allowed_roles = (User.Role.REGIONAL_AGENT, User.Role.ADMINISTRATOR)
     page_title = 'Agents provinciaux'
-    page_intro = 'Administration des agents provinciaux relevant de votre region.'
+    page_intro = 'Administration des agents provinciaux relevant de votre région.'
     create_url_name = 'accounts:provincial_create'
     update_url_name = 'accounts:provincial_update'
     delete_url_name = 'accounts:provincial_delete'
@@ -54,8 +54,8 @@ class ProvincialUserCreateView(RoleRequiredMixin, FormPageMixin, CreateView):
     success_url = reverse_lazy('accounts:provincial_list')
     cancel_url = reverse_lazy('accounts:provincial_list')
     page_title = 'Enregistrer un agent provincial'
-    page_intro = "Renseignez les informations du nouvel agent provincial rattache a votre region."
-    success_message = "Le compte de l'agent provincial a ete cree avec succes."
+    page_intro = "Renseignez les informations du nouvel agent provincial rattaché à votre région."
+    success_message = "Le compte de l'agent provincial a été créé avec succès."
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -69,10 +69,10 @@ class ProvincialUserUpdateView(RoleRequiredMixin, ObjectPermissionMixin, FormPag
     allowed_roles = (User.Role.REGIONAL_AGENT, User.Role.ADMINISTRATOR)
     success_url = reverse_lazy('accounts:provincial_list')
     cancel_url = reverse_lazy('accounts:provincial_list')
-    page_title = "Mettre a jour un agent provincial"
+    page_title = "Mettre à jour un agent provincial"
     page_intro = "Actualisez les informations administratives de cet agent provincial."
-    success_message = "Le compte de l'agent provincial a ete mis a jour avec succes."
-    permission_denied_message = "Vous pouvez uniquement modifier les agents provinciaux rattaches a votre region."
+    success_message = "Le compte de l'agent provincial a été mis à jour avec succès."
+    permission_denied_message = "Vous pouvez uniquement modifier les agents provinciaux rattachés à votre région."
 
     def has_object_permission(self, obj):
         return self.request.user.can_manage_provincial_user(obj)
@@ -89,9 +89,9 @@ class ProvincialUserDeleteView(RoleRequiredMixin, ObjectPermissionMixin, DeleteP
     success_url = reverse_lazy('accounts:provincial_list')
     cancel_url = reverse_lazy('accounts:provincial_list')
     page_title = 'Supprimer un agent provincial'
-    page_intro = "Cette operation retire definitivement le compte d'un agent provincial de votre region."
-    delete_message = "Le compte de l'agent provincial a ete supprime avec succes."
-    permission_denied_message = "Vous pouvez uniquement supprimer les agents provinciaux rattaches a votre region."
+    page_intro = "Cette opération retire définitivement le compte d'un agent provincial de votre région."
+    delete_message = "Le compte de l'agent provincial a été supprimé avec succès."
+    permission_denied_message = "Vous pouvez uniquement supprimer les agents provinciaux rattachés à votre région."
 
     def has_object_permission(self, obj):
         return self.request.user.can_manage_provincial_user(obj)
@@ -99,8 +99,8 @@ class ProvincialUserDeleteView(RoleRequiredMixin, ObjectPermissionMixin, DeleteP
 
 class PedagogicalSupervisorListView(RoleRequiredMixin, ManagedUserListView):
     allowed_roles = (User.Role.PROVINCIAL_USER, User.Role.ADMINISTRATOR)
-    page_title = 'Encadreurs pedagogiques'
-    page_intro = 'Administration des encadreurs pedagogiques relevant de votre province.'
+    page_title = 'Encadreurs pédagogiques'
+    page_intro = 'Administration des encadreurs pédagogiques relevant de votre province.'
     create_url_name = 'accounts:supervisor_create'
     update_url_name = 'accounts:supervisor_update'
     delete_url_name = 'accounts:supervisor_delete'
@@ -115,9 +115,9 @@ class PedagogicalSupervisorCreateView(RoleRequiredMixin, FormPageMixin, CreateVi
     allowed_roles = (User.Role.PROVINCIAL_USER, User.Role.ADMINISTRATOR)
     success_url = reverse_lazy('accounts:supervisor_list')
     cancel_url = reverse_lazy('accounts:supervisor_list')
-    page_title = 'Enregistrer un encadreur pedagogique'
-    page_intro = "Renseignez les informations du nouvel encadreur pedagogique de votre province."
-    success_message = "Le compte de l'encadreur pedagogique a ete cree avec succes."
+    page_title = 'Enregistrer un encadreur pédagogique'
+    page_intro = "Renseignez les informations du nouvel encadreur pédagogique de votre province."
+    success_message = "Le compte de l'encadreur pédagogique a été créé avec succès."
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -131,11 +131,11 @@ class PedagogicalSupervisorUpdateView(RoleRequiredMixin, ObjectPermissionMixin, 
     allowed_roles = (User.Role.PROVINCIAL_USER, User.Role.ADMINISTRATOR)
     success_url = reverse_lazy('accounts:supervisor_list')
     cancel_url = reverse_lazy('accounts:supervisor_list')
-    page_title = 'Mettre a jour un encadreur pedagogique'
-    page_intro = "Actualisez les informations administratives de cet encadreur pedagogique."
-    success_message = "Le compte de l'encadreur pedagogique a ete mis a jour avec succes."
+    page_title = 'Mettre à jour un encadreur pédagogique'
+    page_intro = "Actualisez les informations administratives de cet encadreur pédagogique."
+    success_message = "Le compte de l'encadreur pédagogique a été mis à jour avec succès."
     permission_denied_message = (
-        "Vous pouvez uniquement modifier les encadreurs pedagogiques rattaches a votre province."
+        "Vous pouvez uniquement modifier les encadreurs pédagogiques rattachés à votre province."
     )
 
     def has_object_permission(self, obj):
@@ -152,11 +152,11 @@ class PedagogicalSupervisorDeleteView(RoleRequiredMixin, ObjectPermissionMixin, 
     allowed_roles = (User.Role.PROVINCIAL_USER, User.Role.ADMINISTRATOR)
     success_url = reverse_lazy('accounts:supervisor_list')
     cancel_url = reverse_lazy('accounts:supervisor_list')
-    page_title = 'Supprimer un encadreur pedagogique'
-    page_intro = "Cette operation retire definitivement le compte d'un encadreur pedagogique de votre province."
-    delete_message = "Le compte de l'encadreur pedagogique a ete supprime avec succes."
+    page_title = 'Supprimer un encadreur pédagogique'
+    page_intro = "Cette opération retire définitivement le compte d'un encadreur pédagogique de votre province."
+    delete_message = "Le compte de l'encadreur pédagogique a été supprimé avec succès."
     permission_denied_message = (
-        "Vous pouvez uniquement supprimer les encadreurs pedagogiques rattaches a votre province."
+        "Vous pouvez uniquement supprimer les encadreurs pédagogiques rattachés à votre province."
     )
 
     def has_object_permission(self, obj):
@@ -165,8 +165,8 @@ class PedagogicalSupervisorDeleteView(RoleRequiredMixin, ObjectPermissionMixin, 
 
 class SchoolDirectorListView(RoleRequiredMixin, ManagedUserListView):
     allowed_roles = (User.Role.PEDAGOGICAL_SUPERVISOR, User.Role.ADMINISTRATOR)
-    page_title = "Directeurs d'ecole"
-    page_intro = "Administration des directeurs d'ecole relevant de votre CEB."
+    page_title = "Directeurs d'école"
+    page_intro = "Administration des directeurs d'école relevant de votre CEB."
     create_url_name = 'accounts:director_create'
     update_url_name = 'accounts:director_update'
     delete_url_name = 'accounts:director_delete'
@@ -181,9 +181,9 @@ class SchoolDirectorCreateView(RoleRequiredMixin, FormPageMixin, CreateView):
     allowed_roles = (User.Role.PEDAGOGICAL_SUPERVISOR, User.Role.ADMINISTRATOR)
     success_url = reverse_lazy('accounts:director_list')
     cancel_url = reverse_lazy('accounts:director_list')
-    page_title = "Enregistrer un directeur d'ecole"
-    page_intro = "Renseignez les informations du nouveau directeur d'ecole de votre CEB."
-    success_message = "Le compte du directeur d'ecole a ete cree avec succes."
+    page_title = "Enregistrer un directeur d'école"
+    page_intro = "Renseignez les informations du nouveau directeur d'école de votre CEB."
+    success_message = "Le compte du directeur d'école a été créé avec succès."
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -197,10 +197,10 @@ class SchoolDirectorUpdateView(RoleRequiredMixin, ObjectPermissionMixin, FormPag
     allowed_roles = (User.Role.PEDAGOGICAL_SUPERVISOR, User.Role.ADMINISTRATOR)
     success_url = reverse_lazy('accounts:director_list')
     cancel_url = reverse_lazy('accounts:director_list')
-    page_title = "Mettre a jour un directeur d'ecole"
-    page_intro = "Actualisez les informations administratives de ce directeur d'ecole."
-    success_message = "Le compte du directeur d'ecole a ete mis a jour avec succes."
-    permission_denied_message = "Vous pouvez uniquement modifier les directeurs d'ecole rattaches a votre CEB."
+    page_title = "Mettre à jour un directeur d'école"
+    page_intro = "Actualisez les informations administratives de ce directeur d'école."
+    success_message = "Le compte du directeur d'école a été mis à jour avec succès."
+    permission_denied_message = "Vous pouvez uniquement modifier les directeurs d'école rattachés à votre CEB."
 
     def has_object_permission(self, obj):
         return self.request.user.can_manage_school_director(obj)
@@ -216,10 +216,10 @@ class SchoolDirectorDeleteView(RoleRequiredMixin, ObjectPermissionMixin, DeleteP
     allowed_roles = (User.Role.PEDAGOGICAL_SUPERVISOR, User.Role.ADMINISTRATOR)
     success_url = reverse_lazy('accounts:director_list')
     cancel_url = reverse_lazy('accounts:director_list')
-    page_title = "Supprimer un directeur d'ecole"
-    page_intro = "Cette operation retire definitivement le compte d'un directeur d'ecole de votre CEB."
-    delete_message = "Le compte du directeur d'ecole a ete supprime avec succes."
-    permission_denied_message = "Vous pouvez uniquement supprimer les directeurs d'ecole rattaches a votre CEB."
+    page_title = "Supprimer un directeur d'école"
+    page_intro = "Cette opération retire définitivement le compte d'un directeur d'école de votre CEB."
+    delete_message = "Le compte du directeur d'école a été supprimé avec succès."
+    permission_denied_message = "Vous pouvez uniquement supprimer les directeurs d'école rattachés à votre CEB."
 
     def has_object_permission(self, obj):
         return self.request.user.can_manage_school_director(obj)
@@ -229,12 +229,12 @@ class PhonePasswordResetView(FormPageMixin, FormView):
     form_class = PhonePasswordResetForm
     success_url = reverse_lazy('login')
     cancel_url = reverse_lazy('login')
-    page_title = 'Reinitialisation du mot de passe'
+    page_title = 'Réinitialisation du mot de passe'
     page_intro = (
-        "Renseignez votre identifiant, votre numero de telephone et votre nouveau mot de passe pour recuperer l'acces a votre compte."
+        "Renseignez votre identifiant, votre numéro de téléphone et votre nouveau mot de passe pour récupérer l'accès à votre compte."
     )
-    submit_label = 'Valider la reinitialisation'
-    success_message = "Votre mot de passe a ete reinitialise avec succes. Vous pouvez a present vous connecter."
+    submit_label = 'Valider la réinitialisation'
+    success_message = "Votre mot de passe a été réinitialisé avec succès. Vous pouvez à présent vous connecter."
 
     def form_valid(self, form):
         form.save()

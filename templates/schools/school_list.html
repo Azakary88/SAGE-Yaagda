@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Ecoles | DREPPNF Yaagda{% endblock %}
+{% block title %}Écoles | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
         <h1 class="h3 mb-1">Etablissements scolaires</h1>
-        <p class="text-muted mb-0">Consultez et pilotez les ecoles selon la province, la CEB ou la localite.</p>
+        <p class="text-muted mb-0">Consultez et pilotez les écoles selon la province, la CEB ou la localité.</p>
     </div>
     <div class="d-flex flex-wrap gap-2">
         {% if user.can_add_school %}
-            <a href="{% url 'schools:create' %}" class="btn btn-success">Enregistrer une ecole</a>
+            <a href="{% url 'schools:create' %}" class="btn btn-success">Enregistrer une école</a>
         {% endif %}
         {% if user.can_add_province %}
             <a href="{% url 'schools:province_create' %}" class="btn btn-outline-success">Enregistrer une province</a>
@@ -26,11 +26,11 @@
         <form method="get" class="row g-3">
             <div class="col-md-5">
                 <label class="form-label">Recherche</label>
-                <input type="text" name="q" value="{{ search_term }}" class="form-control" placeholder="Nom, code ou localite de l'etablissement">
+                <input type="text" name="q" value="{{ search_term }}" class="form-control" placeholder="Nom, code ou localité de l'établissement">
             </div>
             <div class="col-md-3">
-                <label class="form-label">Province</label>
-                <select name="province" class="form-select">
+                <label for="id_province" class="form-label">Province</label>
+                <select name="province" id="id_province" class="form-select" title="Filtrer par province">
                     <option value="">Toutes</option>
                     {% for province in provinces %}
                         <option value="{{ province.id }}" {% if selected_province == province.id|stringformat:'s' %}selected{% endif %}>{{ province.name }}</option>
@@ -38,8 +38,8 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <label class="form-label">CEB</label>
-                <select name="ceb" class="form-select">
+                <label for="id_ceb" class="form-label">CEB</label>
+                <select name="ceb" id="id_ceb" class="form-select" title="Filtrer par CEB">
                     <option value="">Toutes</option>
                     {% for ceb in cebs %}
                         <option value="{{ ceb.id }}" {% if selected_ceb == ceb.id|stringformat:'s' %}selected{% endif %}>{{ ceb.name }}</option>
@@ -60,11 +60,11 @@
             <thead class="table-light">
                 <tr>
                     <th>Code</th>
-                    <th>Ecole</th>
+                    <th>École</th>
                     <th>Directeur</th>
                     <th>Province</th>
                     <th>CEB</th>
-                    <th>Activites</th>
+                    <th>Activités</th>
                     <th>Score administratif</th>
                     <th>Score d'innovation</th>
                     <th>Actions</th>
@@ -79,7 +79,7 @@
                             {% if school.director %}
                                 {{ school.director.get_full_name|default:school.director.username }}
                             {% else %}
-                                <span class="text-muted">Non attribue</span>
+                                <span class="text-muted">Non attribué</span>
                             {% endif %}
                         </td>
                         <td>{{ school.province.name }}</td>
@@ -90,7 +90,7 @@
                         <td class="text-nowrap">
                             <a href="{% url 'schools:detail' school.pk %}" class="btn btn-sm btn-outline-secondary">Voir</a>
                             {% if user.can_add_school %}
-                                <a href="{% url 'schools:school_evaluation_create' %}?school={{ school.id }}" class="btn btn-sm btn-outline-primary">Evaluer</a>
+                                <a href="{% url 'schools:school_evaluation_create' %}?school={{ school.id }}" class="btn btn-sm btn-outline-primary">Évaluer</a>
                                 <a href="{% url 'schools:update' school.pk %}" class="btn btn-sm btn-outline-success">Modifier</a>
                                 <a href="{% url 'schools:delete' school.pk %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
                             {% endif %}
@@ -98,7 +98,7 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="9" class="text-center text-muted py-4">Aucun etablissement scolaire ne correspond aux criteres saisis.</td>
+                        <td colspan="9" class="text-center text-muted py-4">Aucun établissement scolaire ne correspond aux critères saisis.</td>
                     </tr>
                 {% endfor %}
             </tbody>

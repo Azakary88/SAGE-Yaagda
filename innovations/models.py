@@ -10,7 +10,7 @@ from schools.models import Province, School
 
 class Innovation(models.Model):
     class Category(models.TextChoices):
-        TRADES = 'TRADES', 'Metiers scolaires'
+        TRADES = 'TRADES', 'Métiers scolaires'
         ICT = 'ICT', 'TIC'
         ENGLISH = 'ENGLISH', 'Anglais'
 
@@ -122,20 +122,20 @@ class Evaluation(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'Evaluation {self.school.name} - {self.innovation.name}'
+        return f'Évaluation {self.school.name} - {self.innovation.name}'
 
 
 class Recommendation(models.Model):
     class Priority(models.TextChoices):
         LOW = 'LOW', 'Faible'
         MEDIUM = 'MEDIUM', 'Moyenne'
-        HIGH = 'HIGH', 'Elevee'
+        HIGH = 'HIGH', 'Élevée'
         CRITICAL = 'CRITICAL', 'Critique'
 
     class Status(models.TextChoices):
         PENDING = 'PENDING', 'En attente'
-        IMPLEMENTED = 'IMPLEMENTED', 'Mise en oeuvre'
-        ARCHIVED = 'ARCHIVED', 'Archivee'
+        IMPLEMENTED = 'IMPLEMENTED', 'Mise en œuvre'
+        ARCHIVED = 'ARCHIVED', 'Archivée'
 
     school = models.ForeignKey(School, on_delete=models.CASCADE, related_name='recommendations')
     innovation = models.ForeignKey(
@@ -167,9 +167,9 @@ class Recommendation(models.Model):
 
 class Report(models.Model):
     class Scope(models.TextChoices):
-        SCHOOL = 'SCHOOL', 'Par ecole'
+        SCHOOL = 'SCHOOL', 'Par école'
         PROVINCE = 'PROVINCE', 'Par province'
-        REGIONAL = 'REGIONAL', 'Regional'
+        REGIONAL = 'REGIONAL', 'Régional'
 
     title = models.CharField(max_length=180)
     scope = models.CharField(max_length=20, choices=Scope.choices)

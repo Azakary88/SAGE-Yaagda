@@ -157,12 +157,12 @@ class ProvinceCreateView(RoleRequiredMixin, FormPageMixin, CreateView):
     model = Province
     form_class = ProvinceForm
     allowed_roles = (User.Role.REGIONAL_AGENT, User.Role.ADMINISTRATOR)
-    permission_denied_message = "Seuls les agents regionaux sont habilites a enregistrer une province."
+    permission_denied_message = "Seuls les agents régionaux sont habilités à enregistrer une province."
     success_url = reverse_lazy('schools:province_list')
     cancel_url = reverse_lazy('schools:province_list')
     page_title = 'Enregistrer une province'
-    page_intro = "Renseignez les informations administratives de la province a integrer dans votre region."
-    success_message = 'La province a ete enregistree avec succes.'
+    page_intro = "Renseignez les informations administratives de la province à intégrer dans votre région."
+    success_message = 'La province a été enregistrée avec succès.'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -174,12 +174,12 @@ class ProvinceUpdateView(RoleRequiredMixin, ObjectPermissionMixin, FormPageMixin
     model = Province
     form_class = ProvinceForm
     allowed_roles = (User.Role.REGIONAL_AGENT, User.Role.ADMINISTRATOR)
-    permission_denied_message = "Vous pouvez uniquement modifier les provinces rattachees a votre region."
+    permission_denied_message = "Vous pouvez uniquement modifier les provinces rattachées à votre région."
     success_url = reverse_lazy('schools:province_list')
     cancel_url = reverse_lazy('schools:province_list')
-    page_title = 'Mettre a jour une province'
+    page_title = 'Mettre à jour une province'
     page_intro = "Actualisez les informations administratives de cette province."
-    success_message = 'La province a ete mise a jour avec succes.'
+    success_message = 'La province a été mise à jour avec succès.'
 
     def has_object_permission(self, obj):
         return self.request.user.can_manage_province(obj)
@@ -193,12 +193,12 @@ class ProvinceUpdateView(RoleRequiredMixin, ObjectPermissionMixin, FormPageMixin
 class ProvinceDeleteView(RoleRequiredMixin, ObjectPermissionMixin, DeletePageMixin, DeleteView):
     model = Province
     allowed_roles = (User.Role.REGIONAL_AGENT, User.Role.ADMINISTRATOR)
-    permission_denied_message = "Vous pouvez uniquement supprimer les provinces rattachees a votre region."
+    permission_denied_message = "Vous pouvez uniquement supprimer les provinces rattachées à votre région."
     success_url = reverse_lazy('schools:province_list')
     cancel_url = reverse_lazy('schools:province_list')
     page_title = 'Supprimer une province'
-    page_intro = "Cette operation retire definitivement la province selectionnee de votre espace de gestion."
-    delete_message = 'La province a ete supprimee avec succes.'
+    page_intro = "Cette opération retire définitivement la province sélectionnée de votre espace de gestion."
+    delete_message = 'La province a été supprimée avec succès.'
 
     def has_object_permission(self, obj):
         return self.request.user.can_manage_province(obj)
@@ -208,12 +208,12 @@ class CEBCreateView(RoleRequiredMixin, FormPageMixin, CreateView):
     model = CEB
     form_class = CEBForm
     allowed_roles = (User.Role.PROVINCIAL_USER, User.Role.ADMINISTRATOR)
-    permission_denied_message = "Seuls les agents provinciaux sont habilites a enregistrer une CEB."
+    permission_denied_message = "Seuls les agents provinciaux sont habilités à enregistrer une CEB."
     success_url = reverse_lazy('schools:ceb_list')
     cancel_url = reverse_lazy('schools:ceb_list')
     page_title = 'Enregistrer une CEB'
-    page_intro = "Renseignez les informations administratives de la CEB a rattacher a votre province."
-    success_message = 'La CEB a ete enregistree avec succes.'
+    page_intro = "Renseignez les informations administratives de la CEB à rattacher à votre province."
+    success_message = 'La CEB a été enregistrée avec succès.'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -225,12 +225,12 @@ class CEBUpdateView(RoleRequiredMixin, ObjectPermissionMixin, FormPageMixin, Upd
     model = CEB
     form_class = CEBForm
     allowed_roles = (User.Role.PROVINCIAL_USER, User.Role.ADMINISTRATOR)
-    permission_denied_message = "Vous pouvez uniquement modifier les CEB rattachees a votre province."
+    permission_denied_message = "Vous pouvez uniquement modifier les CEB rattachées à votre province."
     success_url = reverse_lazy('schools:ceb_list')
     cancel_url = reverse_lazy('schools:ceb_list')
-    page_title = 'Mettre a jour une CEB'
+    page_title = 'Mettre à jour une CEB'
     page_intro = "Actualisez les informations administratives de cette CEB."
-    success_message = 'La CEB a ete mise a jour avec succes.'
+    success_message = 'La CEB a été mise à jour avec succès.'
 
     def has_object_permission(self, obj):
         return self.request.user.can_manage_ceb(obj)
@@ -244,12 +244,12 @@ class CEBUpdateView(RoleRequiredMixin, ObjectPermissionMixin, FormPageMixin, Upd
 class CEBDeleteView(RoleRequiredMixin, ObjectPermissionMixin, DeletePageMixin, DeleteView):
     model = CEB
     allowed_roles = (User.Role.PROVINCIAL_USER, User.Role.ADMINISTRATOR)
-    permission_denied_message = "Vous pouvez uniquement supprimer les CEB rattachees a votre province."
+    permission_denied_message = "Vous pouvez uniquement supprimer les CEB rattachées à votre province."
     success_url = reverse_lazy('schools:ceb_list')
     cancel_url = reverse_lazy('schools:ceb_list')
     page_title = 'Supprimer une CEB'
-    page_intro = "Cette operation retire definitivement la CEB selectionnee de votre espace de gestion."
-    delete_message = 'La CEB a ete supprimee avec succes.'
+    page_intro = "Cette opération retire définitivement la CEB sélectionnée de votre espace de gestion."
+    delete_message = 'La CEB a été supprimée avec succès.'
 
     def has_object_permission(self, obj):
         return self.request.user.can_manage_ceb(obj)
@@ -259,14 +259,14 @@ class SchoolCreateView(RoleRequiredMixin, FormPageMixin, CreateView):
     model = School
     form_class = SchoolForm
     allowed_roles = (User.Role.PEDAGOGICAL_SUPERVISOR, User.Role.ADMINISTRATOR)
-    permission_denied_message = "Seuls les encadreurs pedagogiques sont habilites a enregistrer une ecole."
+    permission_denied_message = "Seuls les encadreurs pédagogiques sont habilités à enregistrer une école."
     cancel_url = reverse_lazy('schools:list')
-    page_title = 'Enregistrer une ecole'
+    page_title = 'Enregistrer une école'
     page_intro = (
-        "Renseignez les informations administratives de l'ecole. "
-        "Le directeur pourra etre associe ulterieurement depuis le module de gestion des directeurs."
+        "Renseignez les informations administratives de l'école. "
+        "Le directeur pourra être associé ultérieurement depuis le module de gestion des directeurs."
     )
-    success_message = "L'ecole a ete enregistree avec succes."
+    success_message = "L'école a été enregistrée avec succès."
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -281,13 +281,13 @@ class SchoolUpdateView(RoleRequiredMixin, ObjectPermissionMixin, FormPageMixin, 
     model = School
     form_class = SchoolForm
     allowed_roles = (User.Role.PEDAGOGICAL_SUPERVISOR, User.Role.ADMINISTRATOR)
-    permission_denied_message = "Vous pouvez uniquement modifier les ecoles rattachees a votre CEB."
-    page_title = "Mettre a jour une ecole"
+    permission_denied_message = "Vous pouvez uniquement modifier les écoles rattachées à votre CEB."
+    page_title = "Mettre à jour une école"
     page_intro = (
-        "Actualisez les informations administratives de cette ecole. "
-        "L'association avec un directeur se gere depuis le module de gestion des directeurs."
+        "Actualisez les informations administratives de cette école. "
+        "L'association avec un directeur se gère depuis le module de gestion des directeurs."
     )
-    success_message = "L'ecole a ete mise a jour avec succes."
+    success_message = "L'école a été mise à jour avec succès."
 
     def has_object_permission(self, obj):
         return self.request.user.can_manage_school(obj)
@@ -308,12 +308,12 @@ class SchoolUpdateView(RoleRequiredMixin, ObjectPermissionMixin, FormPageMixin, 
 class SchoolDeleteView(RoleRequiredMixin, ObjectPermissionMixin, DeletePageMixin, DeleteView):
     model = School
     allowed_roles = (User.Role.PEDAGOGICAL_SUPERVISOR, User.Role.ADMINISTRATOR)
-    permission_denied_message = "Vous pouvez uniquement supprimer les ecoles rattachees a votre CEB."
+    permission_denied_message = "Vous pouvez uniquement supprimer les écoles rattachées à votre CEB."
     success_url = reverse_lazy('schools:list')
     cancel_url = reverse_lazy('schools:list')
-    page_title = "Supprimer l'ecole"
-    page_intro = "Cette operation retire definitivement l'ecole selectionnee de votre espace de gestion."
-    delete_message = "L'ecole a ete supprimee avec succes."
+    page_title = "Supprimer l'école"
+    page_intro = "Cette opération retire définitivement l'école sélectionnée de votre espace de gestion."
+    delete_message = "L'école a été supprimée avec succès."
 
     def has_object_permission(self, obj):
         return self.request.user.can_manage_school(obj)
@@ -325,9 +325,9 @@ class ProvinceEvaluationCreateView(RoleRequiredMixin, FormPageMixin, CreateView)
     allowed_roles = (User.Role.REGIONAL_AGENT, User.Role.ADMINISTRATOR)
     success_url = reverse_lazy('schools:province_list')
     cancel_url = reverse_lazy('schools:province_list')
-    page_title = 'Enregistrer une evaluation de province'
-    page_intro = "Saisissez l'evaluation administrative de la province selectionnee."
-    success_message = "L'evaluation de la province a ete enregistree avec succes."
+    page_title = 'Enregistrer une évaluation de province'
+    page_intro = "Saisissez l'évaluation administrative de la province sélectionnée."
+    success_message = "L'évaluation de la province a été enregistrée avec succès."
 
     def get_initial(self):
         initial = super().get_initial()
@@ -352,9 +352,9 @@ class CEBEvaluationCreateView(RoleRequiredMixin, FormPageMixin, CreateView):
     allowed_roles = (User.Role.PROVINCIAL_USER, User.Role.ADMINISTRATOR)
     success_url = reverse_lazy('schools:ceb_list')
     cancel_url = reverse_lazy('schools:ceb_list')
-    page_title = 'Enregistrer une evaluation de CEB'
-    page_intro = "Saisissez l'evaluation administrative de la CEB selectionnee."
-    success_message = "L'evaluation de la CEB a ete enregistree avec succes."
+    page_title = 'Enregistrer une évaluation de CEB'
+    page_intro = "Saisissez l'évaluation administrative de la CEB sélectionnée."
+    success_message = "L'évaluation de la CEB a été enregistrée avec succès."
 
     def get_initial(self):
         initial = super().get_initial()
@@ -379,9 +379,9 @@ class SchoolAdministrativeEvaluationCreateView(RoleRequiredMixin, FormPageMixin,
     allowed_roles = (User.Role.PEDAGOGICAL_SUPERVISOR, User.Role.ADMINISTRATOR)
     success_url = reverse_lazy('schools:list')
     cancel_url = reverse_lazy('schools:list')
-    page_title = "Enregistrer une evaluation d'ecole"
-    page_intro = "Saisissez l'evaluation administrative de l'ecole selectionnee."
-    success_message = "L'evaluation de l'ecole a ete enregistree avec succes."
+    page_title = "Enregistrer une évaluation d'école"
+    page_intro = "Saisissez l'évaluation administrative de l'école sélectionnée."
+    success_message = "L'évaluation de l'école a été enregistrée avec succès."
 
     def get_initial(self):
         initial = super().get_initial()

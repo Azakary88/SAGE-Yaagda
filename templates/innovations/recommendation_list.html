@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Recommandations | DREPPNF Yaagda{% endblock %}
+{% block title %}Recommandations | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
         <h1 class="h3 mb-1">Recommandations de suivi</h1>
-        <p class="text-muted mb-0">Consultez les recommandations generees a partir des evaluations menees sur le terrain.</p>
+        <p class="text-muted mb-0">Consultez les recommandations générées à partir des évaluations menées sur le terrain.</p>
     </div>
     {% if user.can_access_admin %}
         <a href="/admin/innovations/recommendation/add/" class="btn btn-success">Enregistrer une recommandation</a>
@@ -18,9 +18,9 @@
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>Ecole</th>
+                    <th>École</th>
                     <th>Innovation</th>
-                    <th>Priorite</th>
+                    <th>Priorité</th>
                     <th>Statut</th>
                     <th>Texte</th>
                 </tr>
@@ -29,14 +29,14 @@
                 {% for recommendation in recommendations %}
                     <tr>
                         <td>{{ recommendation.school.name }}</td>
-                        <td>{{ recommendation.innovation.name|default:'General' }}</td>
+                        <td>{{ recommendation.innovation.name|default:'Général' }}</td>
                         <td>{{ recommendation.get_priority_display }}</td>
                         <td>{{ recommendation.get_status_display }}</td>
                         <td>{{ recommendation.recommendation_text }}</td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-4">Aucune recommandation n'est disponible dans votre perimetre.</td>
+                        <td colspan="5" class="text-center text-muted py-4">Aucune recommandation n'est disponible dans votre zone d'action.</td>
                     </tr>
                 {% endfor %}
             </tbody>

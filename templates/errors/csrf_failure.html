@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} | SAGE YAADGA{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-lg-5">
+                <span class="badge rounded-pill text-bg-warning mb-3">Erreur 403</span>
+                <h1 class="h3 mb-3">{{ page_title }}</h1>
+                <p class="text-muted mb-3">
+                    La demande a été interrompue pour protéger l'application contre une soumission non sécurisée.
+                </p>
+                <div class="alert alert-warning mb-4">
+                    {{ reason_message }}
+                </div>
+                <p class="mb-4">
+                    Rechargez d'abord la page contenant le formulaire, puis recommencez l'opération. Cela régénère un jeton valide.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ retry_url }}" class="btn btn-success">Retourner et recharger la page</a>
+                    <a href="{{ fallback_url }}" class="btn btn-outline-secondary">Aller à l'accueil sécurisé</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

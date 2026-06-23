@@ -49,7 +49,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dreppnf_platform.wsgi.application'
 
-if os.getenv('MYSQL_DATABASE'):
+USE_SQLITE = os.getenv('USE_SQLITE', '').lower() in {'1', 'true', 'yes'}
+USE_MYSQL = os.getenv('MYSQL_DATABASE') and not USE_SQLITE
+
+if USE_MYSQL:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -58,6 +61,9 @@ if os.getenv('MYSQL_DATABASE'):
             'PASSWORD': os.getenv('MYSQL_PASSWORD', ''),
             'HOST': os.getenv('MYSQL_HOST', '127.0.0.1'),
             'PORT': os.getenv('MYSQL_PORT', '3306'),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+            },
         }
     }
 else:
@@ -102,3 +108,4 @@ AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard:home'
 LOGOUT_REDIRECT_URL = 'login'
+CSRF_FAILURE_VIEW = 'dreppnf_platform.views.csrf_failure'

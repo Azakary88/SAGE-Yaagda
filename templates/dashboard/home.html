@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Tableau de bord | DREPPNF Yaagda{% endblock %}
+{% block title %}Tableau de bord | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
@@ -8,13 +8,13 @@
         <h1 class="h3 mb-1">{{ dashboard_title }}</h1>
         <p class="text-muted mb-0">{{ dashboard_intro }}</p>
     </div>
-    <div class="d-flex flex-wrap gap-2">
-        <a href="{% url 'innovations:activity_report' %}" class="btn btn-outline-success">Rapports et syntheses</a>
+    <div class="dashboard-toolbar-frame">
+        <a href="{% url 'innovations:activity_report' %}" class="btn btn-outline-success">Rapports et synthèses</a>
         {% if user.can_add_activity %}
-            <a href="{% url 'innovations:activity_create' %}" class="btn btn-success">Enregistrer une activite</a>
+            <a href="{% url 'innovations:activity_create' %}" class="btn btn-success">Enregistrer une activité</a>
         {% endif %}
         {% if user.can_add_school %}
-            <a href="{% url 'schools:create' %}" class="btn btn-success">Enregistrer une ecole</a>
+            <a href="{% url 'schools:create' %}" class="btn btn-success">Enregistrer une école</a>
         {% endif %}
         {% if user.can_add_province %}
             <a href="{% url 'schools:province_create' %}" class="btn btn-outline-success">Enregistrer une province</a>
@@ -26,10 +26,10 @@
             <a href="{% url 'accounts:provincial_list' %}" class="btn btn-outline-secondary">Agents provinciaux</a>
         {% endif %}
         {% if user.can_add_pedagogical_supervisor %}
-            <a href="{% url 'accounts:supervisor_list' %}" class="btn btn-outline-secondary">Encadreurs pedagogiques</a>
+            <a href="{% url 'accounts:supervisor_list' %}" class="btn btn-outline-secondary">Encadreurs pédagogiques</a>
         {% endif %}
         {% if user.can_add_school_director %}
-            <a href="{% url 'accounts:director_list' %}" class="btn btn-outline-secondary">Directeurs d'ecole</a>
+            <a href="{% url 'accounts:director_list' %}" class="btn btn-outline-secondary">Directeurs d'école</a>
         {% endif %}
         {% if user.can_access_admin %}
             <a href="/admin/" class="btn btn-outline-dark">Administration</a>
@@ -74,10 +74,10 @@
 
 <div class="card shadow-sm border-0 mb-4">
     <div class="card-body">
-        <h2 class="h6 text-uppercase text-muted mb-3">Perimetre de consultation</h2>
+        <h2 class="h6 text-uppercase text-muted mb-3">Zone d'action de consultation</h2>
         <div class="row g-3">
             <div class="col-md-3">
-                <div class="small text-muted">Regions</div>
+                <div class="small text-muted">Régions</div>
                 <div class="fw-semibold">{{ visible_scope.regions }}</div>
             </div>
             <div class="col-md-3">
@@ -89,7 +89,7 @@
                 <div class="fw-semibold">{{ visible_scope.cebs }}</div>
             </div>
             <div class="col-md-3">
-                <div class="small text-muted">Ecoles</div>
+                <div class="small text-muted">Écoles</div>
                 <div class="fw-semibold">{{ visible_scope.schools }}</div>
             </div>
         </div>
@@ -100,8 +100,10 @@
     <div class="col-lg-6">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
-                <h2 class="h5 mb-3">Activites par innovation</h2>
-                <canvas id="innovationChart"></canvas>
+                <h2 class="h5 mb-3">Activités par innovation</h2>
+                <div class="dashboard-chart-compact">
+                    <canvas id="innovationChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -121,14 +123,14 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
                 <div>
                     <h2 class="h5 mb-1">{{ ai_title }}</h2>
-                    <p class="text-muted mb-0">{{ ai_subtitle }} Moteur utilise : {{ ai_analysis.engine_name }}.</p>
+                    <p class="text-muted mb-0">{{ ai_subtitle }} Moteur utilisé : {{ ai_analysis.engine_name }}.</p>
                 </div>
                 <div class="d-flex flex-wrap gap-2 align-items-center">
-                    <span class="badge text-bg-danger">Risque eleve : {{ ai_analysis.summary.high_risk }}</span>
+                    <span class="badge text-bg-danger">Risque élevé : {{ ai_analysis.summary.high_risk }}</span>
                     <span class="badge text-bg-warning">Suivi prioritaire : {{ ai_analysis.summary.monitored }}</span>
                     <span class="badge text-bg-success">Bonne dynamique : {{ ai_analysis.summary.healthy }}</span>
                     <span class="badge text-bg-primary">Confiance moyenne : {{ ai_analysis.summary.avg_confidence }}/100</span>
-                    <a href="{% url 'dashboard:ai_analysis' %}" class="btn btn-sm btn-outline-secondary">Analyse detaillee</a>
+                    <a href="{% url 'dashboard:ai_analysis' %}" class="btn btn-sm btn-outline-secondary">Analyse détaillée</a>
                     <a href="{% url 'dashboard:ai_analysis_pdf' %}" class="btn btn-sm btn-outline-success">Rapport PDF</a>
                 </div>
             </div>
@@ -142,7 +144,7 @@
                         <table class="table align-middle">
                             <thead>
                                 <tr>
-                                    <th>Ecole</th>
+                                    <th>École</th>
                                     <th>Profil IA</th>
                                     <th>Score de risque</th>
                                     <th>Confiance</th>
@@ -180,7 +182,7 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
-                <h2 class="h5 mb-0">Synthese des provinces</h2>
+                <h2 class="h5 mb-0">Synthèse des provinces</h2>
                 {% if user.can_add_provincial_user %}
                     <a href="{% url 'accounts:provincial_create' %}" class="btn btn-sm btn-outline-secondary">Nouvel agent provincial</a>
                 {% endif %}
@@ -192,8 +194,8 @@
                             <th>Code</th>
                             <th>Province</th>
                             <th>CEB</th>
-                            <th>Ecoles</th>
-                            <th>Activites</th>
+                            <th>Écoles</th>
+                            <th>Activités</th>
                             <th>Score moyen</th>
                             <th>Actions</th>
                         </tr>
@@ -213,11 +215,13 @@
                                         <span class="text-muted">N/D</span>
                                     {% endif %}
                                 </td>
-                                <td class="text-nowrap">
-                                    <a href="{% url 'schools:province_evaluation_create' %}?province={{ province.id }}" class="btn btn-sm btn-outline-primary">Evaluer</a>
-                                    {% if user.can_add_province %}
-                                        <a href="{% url 'schools:province_update' province.id %}" class="btn btn-sm btn-outline-success">Modifier</a>
-                                    {% endif %}
+                                <td>
+                                    <div class="dashboard-action-frame dashboard-action-frame-sm dashboard-table-actions">
+                                        <a href="{% url 'schools:province_evaluation_create' %}?province={{ province.id }}" class="btn btn-sm btn-outline-primary">Évaluer</a>
+                                        {% if user.can_add_province %}
+                                            <a href="{% url 'schools:province_update' province.id %}" class="btn btn-sm btn-outline-success">Modifier</a>
+                                        {% endif %}
+                                    </div>
                                 </td>
                             </tr>
                         {% empty %}
@@ -234,9 +238,9 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
-                <h2 class="h5 mb-0">Synthese des CEB</h2>
+                <h2 class="h5 mb-0">Synthèse des CEB</h2>
                 {% if user.can_add_pedagogical_supervisor %}
-                    <a href="{% url 'accounts:supervisor_create' %}" class="btn btn-sm btn-outline-secondary">Nouvel encadreur pedagogique</a>
+                    <a href="{% url 'accounts:supervisor_create' %}" class="btn btn-sm btn-outline-secondary">Nouvel encadreur pédagogique</a>
                 {% endif %}
             </div>
             <div class="table-responsive">
@@ -246,8 +250,8 @@
                             <th>Code</th>
                             <th>CEB</th>
                             <th>Province</th>
-                            <th>Ecoles</th>
-                            <th>Activites</th>
+                            <th>Écoles</th>
+                            <th>Activités</th>
                             <th>Score moyen</th>
                             <th>Actions</th>
                         </tr>
@@ -267,11 +271,13 @@
                                         <span class="text-muted">N/D</span>
                                     {% endif %}
                                 </td>
-                                <td class="text-nowrap">
-                                    <a href="{% url 'schools:ceb_evaluation_create' %}?ceb={{ ceb.id }}" class="btn btn-sm btn-outline-primary">Evaluer</a>
-                                    {% if user.can_add_ceb %}
-                                        <a href="{% url 'schools:ceb_update' ceb.id %}" class="btn btn-sm btn-outline-success">Modifier</a>
-                                    {% endif %}
+                                <td>
+                                    <div class="dashboard-action-frame dashboard-action-frame-sm dashboard-table-actions">
+                                        <a href="{% url 'schools:ceb_evaluation_create' %}?ceb={{ ceb.id }}" class="btn btn-sm btn-outline-primary">Évaluer</a>
+                                        {% if user.can_add_ceb %}
+                                            <a href="{% url 'schools:ceb_update' ceb.id %}" class="btn btn-sm btn-outline-success">Modifier</a>
+                                        {% endif %}
+                                    </div>
                                 </td>
                             </tr>
                         {% empty %}
@@ -288,9 +294,9 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
-                <h2 class="h5 mb-0">Synthese des ecoles</h2>
+                <h2 class="h5 mb-0">Synthèse des écoles</h2>
                 {% if user.can_add_school_director %}
-                    <a href="{% url 'accounts:director_create' %}" class="btn btn-sm btn-outline-secondary">Nouveau directeur d'ecole</a>
+                    <a href="{% url 'accounts:director_create' %}" class="btn btn-sm btn-outline-secondary">Nouveau directeur d'école</a>
                 {% endif %}
             </div>
             <div class="table-responsive">
@@ -298,9 +304,9 @@
                     <thead>
                         <tr>
                             <th>Code</th>
-                            <th>Ecole</th>
+                            <th>École</th>
                             <th>Directeur</th>
-                            <th>Activites</th>
+                            <th>Activités</th>
                     <th>Score administratif</th>
                     <th>Score d'innovation</th>
                             <th>Actions</th>
@@ -315,7 +321,7 @@
                                     {% if school.director %}
                                         {{ school.director.get_full_name|default:school.director.username }}
                                     {% else %}
-                                        <span class="text-muted">Non attribue</span>
+                                        <span class="text-muted">Non attribué</span>
                                     {% endif %}
                                 </td>
                                 <td>{{ school.total_activities }}</td>
@@ -333,14 +339,16 @@
                                         <span class="text-muted">N/D</span>
                                     {% endif %}
                                 </td>
-                                <td class="text-nowrap">
-                                    <a href="{% url 'schools:school_evaluation_create' %}?school={{ school.id }}" class="btn btn-sm btn-outline-primary">Evaluer</a>
-                                    <a href="{% url 'schools:detail' school.id %}" class="btn btn-sm btn-outline-secondary">Voir</a>
+                                <td>
+                                    <div class="dashboard-action-frame dashboard-action-frame-sm dashboard-table-actions">
+                                        <a href="{% url 'schools:school_evaluation_create' %}?school={{ school.id }}" class="btn btn-sm btn-outline-primary">Évaluer</a>
+                                        <a href="{% url 'schools:detail' school.id %}" class="btn btn-sm btn-outline-secondary">Voir</a>
+                                    </div>
                                 </td>
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="7" class="text-center text-muted py-4">Aucune ecole visible.</td>
+                                <td colspan="7" class="text-center text-muted py-4">Aucune école visible.</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -353,13 +361,13 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
                 <div>
-                    <h2 class="h5 mb-1">Activites declarees par votre ecole</h2>
+                    <h2 class="h5 mb-1">Activités déclarées par votre école</h2>
                     {% if director_school %}
                         <p class="text-muted mb-0">{{ director_school.name }} | {{ director_school.ceb.name }} | {{ director_school.province.name }}</p>
                     {% endif %}
                 </div>
                 {% if user.can_add_activity and director_school %}
-                    <a href="{% url 'innovations:activity_create' %}?school={{ director_school.id }}" class="btn btn-sm btn-success">Enregistrer une activite</a>
+                    <a href="{% url 'innovations:activity_create' %}?school={{ director_school.id }}" class="btn btn-sm btn-success">Enregistrer une activité</a>
                 {% endif %}
             </div>
             <div class="table-responsive">
@@ -380,15 +388,17 @@
                                 <td>{{ activity.innovation.name }}</td>
                                 <td>{{ activity.title }}</td>
                                 <td>{{ activity.media_total }}</td>
-                                <td class="text-nowrap">
-                                    <a href="{% url 'innovations:activity_detail' activity.id %}" class="btn btn-sm btn-outline-secondary">Voir</a>
-                                    <a href="{% url 'innovations:activity_update' activity.id %}" class="btn btn-sm btn-outline-success">Modifier</a>
-                                    <a href="{% url 'innovations:activity_delete' activity.id %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                                <td>
+                                    <div class="dashboard-action-frame dashboard-action-frame-sm dashboard-table-actions">
+                                        <a href="{% url 'innovations:activity_detail' activity.id %}" class="btn btn-sm btn-outline-secondary">Voir</a>
+                                        <a href="{% url 'innovations:activity_update' activity.id %}" class="btn btn-sm btn-outline-success">Modifier</a>
+                                        <a href="{% url 'innovations:activity_delete' activity.id %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                                    </div>
                                 </td>
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="5" class="text-center text-muted py-4">Aucune activite n'a encore ete declaree pour votre ecole.</td>
+                                <td colspan="5" class="text-center text-muted py-4">Aucune activité n'a encore été déclarée pour votre école.</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -399,7 +409,7 @@
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
-            <h2 class="h5 mb-3">Derniers medias ajoutes</h2>
+            <h2 class="h5 mb-3">Derniers médias ajoutés</h2>
             <div class="row g-3">
                 {% for media in latest_media %}
                     <div class="col-md-4">
@@ -413,7 +423,7 @@
                         </div>
                     </div>
                 {% empty %}
-                    <p class="text-muted mb-0">Aucun media n'a encore ete ajoute.</p>
+                    <p class="text-muted mb-0">Aucun média n'a encore été ajouté.</p>
                 {% endfor %}
             </div>
         </div>
@@ -425,7 +435,7 @@
         <div class="col-lg-6">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h2 class="h5 mb-3">Ecoles les plus performantes</h2>
+                    <h2 class="h5 mb-3">Écoles les plus performantes</h2>
                     <div class="list-group list-group-flush">
                         {% for school in top_schools %}
                             <div class="list-group-item px-0">
@@ -433,10 +443,10 @@
                                     <a href="{% url 'schools:detail' school.pk %}" class="fw-semibold text-decoration-none">{{ school.name }}</a>
                                     <span class="badge text-bg-success">{{ school.avg_score|floatformat:1 }}/100</span>
                                 </div>
-                                <small class="text-muted">{{ school.total_activities }} activite(s)</small>
+                                <small class="text-muted">{{ school.total_activities }} activité(s)</small>
                             </div>
                         {% empty %}
-                            <p class="text-muted mb-0">Aucune evaluation n'est disponible pour le moment.</p>
+                            <p class="text-muted mb-0">Aucune évaluation n'est disponible pour le moment.</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -445,7 +455,7 @@
         <div class="col-lg-6">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h2 class="h5 mb-3">Besoins prioritaires identifies</h2>
+                    <h2 class="h5 mb-3">Besoins prioritaires identifiés</h2>
                     <div class="list-group list-group-flush">
                         {% for item in priority_needs %}
                             <div class="list-group-item px-0">
@@ -458,7 +468,7 @@
                                 <small class="text-muted">{{ item.reasons }}</small>
                             </div>
                         {% empty %}
-                            <p class="text-muted mb-0">Aucun besoin prioritaire n'a ete identifie.</p>
+                            <p class="text-muted mb-0">Aucun besoin prioritaire n'a été identifié.</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -471,13 +481,13 @@
     <div class="col-lg-6">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
-                <h2 class="h5 mb-3">Dernieres activites declarees</h2>
+                <h2 class="h5 mb-3">Dernières activités déclarées</h2>
                 <div class="table-responsive">
                     <table class="table align-middle">
                         <thead>
                             <tr>
                                 <th>Province</th>
-                                <th>Ecole</th>
+                                <th>École</th>
                                 <th>Innovation</th>
                                 <th>Date</th>
                             </tr>
@@ -492,7 +502,7 @@
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="4" class="text-muted">Aucune activite n'a encore ete declaree.</td>
+                                    <td colspan="4" class="text-muted">Aucune activité n'a encore été déclarée.</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -505,7 +515,7 @@
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="h5 mb-0">Dernieres recommandations</h2>
+                    <h2 class="h5 mb-0">Dernières recommandations</h2>
                     <span class="badge text-bg-secondary">{{ recommendations_total }}</span>
                 </div>
                 <div class="list-group list-group-flush">
@@ -520,7 +530,7 @@
                             </div>
                         </div>
                     {% empty %}
-                        <p class="text-muted mb-0">Aucune recommandation n'a encore ete generee.</p>
+                        <p class="text-muted mb-0">Aucune recommandation n'a encore été générée.</p>
                     {% endfor %}
                 </div>
             </div>
@@ -541,18 +551,25 @@
     const aiValues = JSON.parse('{{ ai_analysis.chart_values|escapejs }}');
 
     new Chart(document.getElementById('innovationChart'), {
-        type: 'bar',
+        type: 'doughnut',
         data: {
             labels: innovationLabels,
             datasets: [{
-                label: 'Nombre d activites',
+                label: "Nombre d'activités",
                 data: innovationValues,
-                backgroundColor: ['#198754', '#0d6efd', '#fd7e14', '#20c997', '#6f42c1']
+                backgroundColor: ['#198754', '#0d6efd', '#fd7e14', '#20c997', '#6f42c1'],
+                borderColor: '#fff',
+                borderWidth: 2
             }]
         },
         options: {
             responsive: true,
-            plugins: { legend: { display: false } }
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                }
+            }
         }
     });
 
@@ -577,6 +594,7 @@
     {% endif %}
 
     new Chart(document.getElementById('comparisonChart'), {
+        type: 'bar',
         data: {
             labels: comparisonLabels,
             datasets: comparisonDatasets
@@ -611,6 +629,8 @@
                     label: 'Score de risque IA',
                     data: aiValues,
                     backgroundColor: '#dc3545',
+                    borderColor: '#dc3545',
+                    borderWidth: 2,
                     borderRadius: 6
                 }]
             },
@@ -620,6 +640,12 @@
                     y: {
                         beginAtZero: true,
                         max: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
                     }
                 }
             }

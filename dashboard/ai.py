@@ -153,52 +153,52 @@ def _compute_confidence_score(row: SchoolFeatureRow) -> float:
 
 def _profile_from_risk_score(risk_score: float):
     if risk_score >= 65:
-        return 'Risque eleve', 'danger'
+        return 'Risque élevé', 'danger'
     if risk_score >= 40:
-        return 'Suivi renforce', 'warning'
+        return 'Suivi renforcé', 'warning'
     return 'Bonne dynamique', 'success'
 
 
 def _build_explanation(row: SchoolFeatureRow, profile_label: str) -> str:
     reasons = []
     if row.total_activities == 0:
-        reasons.append("aucune activite remontee")
+        reasons.append("aucune activité remontée")
     elif row.total_activities < 2:
-        reasons.append("volume d'activites encore faible")
+        reasons.append("volume d'activités encore faible")
     if row.avg_innovation_score < 60:
-        reasons.append("resultats d'innovation a renforcer")
+        reasons.append("résultats d'innovation à renforcer")
     if row.avg_admin_score < 60:
-        reasons.append("pilotage administratif a consolider")
+        reasons.append("pilotage administratif à consolider")
     if row.critical_recommendations:
         reasons.append("recommandations critiques en attente")
     elif row.high_recommendations:
-        reasons.append("recommandations prioritaires a traiter")
+        reasons.append("recommandations prioritaires à traiter")
     if row.media_total == 0:
-        reasons.append("peu de preuves terrain televersees")
+        reasons.append("peu de preuves terrain téléversées")
 
     if not reasons:
         if profile_label == 'Bonne dynamique':
-            reasons.append("performances stables et activites regulieres")
+            reasons.append("performances stables et activités régulières")
         else:
-            reasons.append("situation intermediaire necessitant un suivi")
+            reasons.append("situation intermédiaire nécessitant un suivi")
 
     return ', '.join(reasons[:3])
 
 
 def _build_action(row: SchoolFeatureRow, profile_label: str) -> str:
-    if profile_label == 'Risque eleve':
+    if profile_label == 'Risque élevé':
         return (
-            "Prevoir un accompagnement prioritaire, renforcer le suivi pedagogique "
-            "et traiter immediatement les contraintes critiques."
+            "Prévoir un accompagnement prioritaire, renforcer le suivi pédagogique "
+            "et traiter immédiatement les contraintes critiques."
         )
-    if profile_label == 'Suivi renforce':
+    if profile_label == 'Suivi renforcé':
         return (
-            "Maintenir un suivi rapproche, augmenter les activites documentees "
-            "et consolider les evaluations."
+            "Maintenir un suivi rapproché, augmenter les activités documentées "
+            "et consolider les évaluations."
         )
     return (
-        "Capitaliser les bonnes pratiques de cette ecole et les partager avec les "
-        "autres unites du perimetre."
+        "Capitaliser les bonnes pratiques de cette école et les partager avec les "
+        "autres unités de la zone d'action."
     )
 
 
@@ -259,7 +259,7 @@ def _cluster_profiles(feature_matrix, risk_scores):
         cluster_index
         for cluster_index, _ in sorted(cluster_risk.items(), key=lambda item: item[1], reverse=True)
     ]
-    profile_labels = ['Risque eleve', 'Suivi renforce', 'Bonne dynamique']
+    profile_labels = ['Risque élevé', 'Suivi renforcé', 'Bonne dynamique']
 
     cluster_profiles = {}
     for order_index, cluster_index in enumerate(sorted_clusters):
@@ -288,7 +288,7 @@ def build_school_ai_analysis(school_queryset, limit=8):
             'confidence_chart_values': '[]',
             'methodology': {
                 'engine_mode': 'Aucun',
-                'description': "Aucune donnee exploitable n'est encore disponible pour lancer le modele.",
+                'description': "Aucune donnée exploitable n'est encore disponible pour lancer le modèle.",
                 'target': '',
                 'confidence_rule': '',
                 'features': [],
@@ -306,7 +306,7 @@ def build_school_ai_analysis(school_queryset, limit=8):
         confidence_score = float(confidence_scores[index])
         if clustered_profiles:
             profile_label = clustered_profiles[index]
-            badge = 'danger' if profile_label == 'Risque eleve' else 'warning' if profile_label == 'Suivi renforce' else 'success'
+            badge = 'danger' if profile_label == 'Risque élevé' else 'warning' if profile_label == 'Suivi renforcé' else 'success'
         else:
             profile_label, badge = _profile_from_risk_score(risk_score)
 
@@ -338,8 +338,8 @@ def build_school_ai_analysis(school_queryset, limit=8):
         'engine_name': engine_name,
         'insights': visible_insights,
         'summary': {
-            'high_risk': sum(1 for item in insights if item['profile_label'] == 'Risque eleve'),
-            'monitored': sum(1 for item in insights if item['profile_label'] == 'Suivi renforce'),
+            'high_risk': sum(1 for item in insights if item['profile_label'] == 'Risque élevé'),
+            'monitored': sum(1 for item in insights if item['profile_label'] == 'Suivi renforcé'),
             'healthy': sum(1 for item in insights if item['profile_label'] == 'Bonne dynamique'),
             'total_schools': len(insights),
             'avg_confidence': round(float(confidence_scores.mean()), 1),
@@ -350,25 +350,25 @@ def build_school_ai_analysis(school_queryset, limit=8):
         'methodology': {
             'engine_mode': engine_name,
             'description': (
-                "Le module IA regroupe les ecoles selon un clustering de type K-Means "
-                "sur les activites, evaluations, recommandations et preuves terrain."
+                "Le module IA regroupe les écoles selon un clustering de type K-Means "
+                "sur les activités, évaluations, recommandations et preuves terrain."
             ),
             'target': (
-                "Identifier automatiquement les ecoles a risque eleve, les ecoles a "
-                "suivi renforce et les ecoles en bonne dynamique."
+                "Identifier automatiquement les écoles à risque élevé, les écoles à "
+                "suivi renforcé et les écoles en bonne dynamique."
             ),
             'confidence_rule': (
-                "Le score de confiance augmente avec le volume d'activites, la presence "
-                "d'evaluations, les recommandations documentees et les preuves terrain."
+                "Le score de confiance augmente avec le volume d'activités, la présence "
+                "d'évaluations, les recommandations documentées et les preuves terrain."
             ),
             'features': [
-                "nombre d'activites",
+                "nombre d'activités",
                 "recommandations critiques et prioritaires",
                 "score moyen d'innovation",
                 "score administratif moyen",
                 "volume de participants",
-                "preuves terrain televersees",
-                "activites avec acces Internet",
+                "preuves terrain téléversées",
+                "activités avec accès Internet",
             ],
         },
     }

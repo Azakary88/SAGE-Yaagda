@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Provinces | DREPPNF Yaagda{% endblock %}
+{% block title %}Provinces | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
         <h1 class="h3 mb-1">Provinces</h1>
-        <p class="text-muted mb-0">Consultez les provinces accessibles selon votre niveau de responsabilite.</p>
+        <p class="text-muted mb-0">Consultez les provinces accessibles selon votre niveau de responsabilité.</p>
     </div>
     {% if user.can_add_province %}
         <a href="{% url 'schools:province_create' %}" class="btn btn-success">Enregistrer une province</a>
@@ -20,10 +20,10 @@
                 <tr>
                     <th>Code</th>
                     <th>Province</th>
-                    <th>Region</th>
+                    <th>Région</th>
                     <th>CEB</th>
-                    <th>Ecoles</th>
-                    <th>Activites</th>
+                    <th>Écoles</th>
+                    <th>Activités</th>
                     <th>Score moyen</th>
                     {% if user.can_add_province %}<th>Actions</th>{% endif %}
                 </tr>
@@ -46,7 +46,7 @@
                         </td>
                         {% if user.can_add_province %}
                             <td class="text-nowrap">
-                                <a href="{% url 'schools:province_evaluation_create' %}?province={{ province.id }}" class="btn btn-sm btn-outline-primary">Evaluer</a>
+                                <a href="{% url 'schools:province_evaluation_create' %}?province={{ province.id }}" class="btn btn-sm btn-outline-primary">Évaluer</a>
                                 <a href="{% url 'schools:province_update' province.pk %}" class="btn btn-sm btn-outline-success">Modifier</a>
                                 <a href="{% url 'schools:province_delete' province.pk %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
                             </td>
@@ -54,7 +54,7 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="{% if user.can_add_province %}8{% else %}7{% endif %}" class="text-center text-muted py-4">Aucune province n'est disponible dans votre perimetre.</td>
+                        <td colspan="{% if user.can_add_province %}8{% else %}7{% endif %}" class="text-center text-muted py-4">Aucune province n'est disponible dans votre zone d'action.</td>
                     </tr>
                 {% endfor %}
             </tbody>

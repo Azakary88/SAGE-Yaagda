@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Analyse IA | DREPPNF Yaagda{% endblock %}
+{% block title %}Analyse IA | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
@@ -27,7 +27,7 @@
         <div class="col-md-6 col-xl-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <div class="small text-muted">Ecoles analysees</div>
+                    <div class="small text-muted">Écoles analysées</div>
                     <div class="fw-semibold">{{ ai_analysis.summary.total_schools }}</div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
         <div class="col-md-6 col-xl-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <div class="small text-muted">Risque eleve</div>
+                    <div class="small text-muted">Risque élevé</div>
                     <div class="fw-semibold text-danger">{{ ai_analysis.summary.high_risk }}</div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
         <div class="col-lg-7">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h2 class="h5 mb-3">Presentation du modele</h2>
+                    <h2 class="h5 mb-3">Présentation du modèle</h2>
                     <p>{{ ai_analysis.methodology.description }}</p>
                     <p>{{ ai_analysis.methodology.target }}</p>
                     <p>{{ ai_analysis.methodology.confidence_rule }}</p>
@@ -80,18 +80,18 @@
 
     <div class="card shadow-sm border-0">
         <div class="card-body">
-            <h2 class="h5 mb-3">Resultats detailles par ecole</h2>
+            <h2 class="h5 mb-3">Résultats détaillés par école</h2>
             <div class="table-responsive">
                 <table class="table align-middle">
                     <thead>
                         <tr>
-                            <th>Ecole</th>
+                            <th>École</th>
                             <th>Profil IA</th>
                             <th>Risque</th>
                             <th>Confiance</th>
-                            <th>Activites</th>
+                            <th>Activités</th>
                             <th>Scores</th>
-                            <th>Interpretation IA</th>
+                            <th>Interprétation IA</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,7 +125,7 @@
 {% else %}
     <div class="card shadow-sm border-0">
         <div class="card-body">
-            <p class="text-muted mb-0">Aucune donnee exploitable n'est encore disponible pour alimenter l'analyse IA.</p>
+            <p class="text-muted mb-0">Aucune donnée exploitable n'est encore disponible pour alimenter l'analyse IA.</p>
         </div>
     </div>
 {% endif %}

@@ -33,7 +33,7 @@ class BaseManagedUserForm(BootstrapFormMixin, forms.ModelForm):
         label='Mot de passe',
         widget=forms.PasswordInput,
         required=False,
-        help_text='Obligatoire a la creation. Laissez ce champ vide pour conserver le mot de passe actuel.',
+        help_text='Obligatoire à la création. Laissez ce champ vide pour conserver le mot de passe actuel.',
     )
     password2 = forms.CharField(
         label='Confirmer le mot de passe',
@@ -54,10 +54,10 @@ class BaseManagedUserForm(BootstrapFormMixin, forms.ModelForm):
         ]
         labels = {
             'username': "Nom d'utilisateur",
-            'first_name': 'Prenom',
+            'first_name': 'Prénom',
             'last_name': 'Nom',
             'email': 'Adresse e-mail',
-            'phone_number': 'Numero de telephone',
+            'phone_number': 'Numéro de téléphone',
             'job_title': 'Fonction',
             'is_active': 'Compte actif',
         }
@@ -77,7 +77,7 @@ class BaseManagedUserForm(BootstrapFormMixin, forms.ModelForm):
         password2 = cleaned_data.get('password2')
 
         if not self.instance.pk and (not password1 or not password2):
-            raise forms.ValidationError("Le mot de passe est obligatoire lors de la creation du compte.")
+            raise forms.ValidationError("Le mot de passe est obligatoire lors de la création du compte.")
         if password1 or password2:
             if password1 != password2:
                 raise forms.ValidationError('Les deux mots de passe saisis doivent etre identiques.')
@@ -160,7 +160,7 @@ class PedagogicalSupervisorForm(BaseManagedUserForm):
 
 class SchoolDirectorForm(BaseManagedUserForm):
     school = forms.ModelChoiceField(
-        label='Ecole',
+        label='École',
         queryset=School.objects.none(),
     )
 
@@ -197,7 +197,7 @@ class SchoolDirectorForm(BaseManagedUserForm):
         school = self.cleaned_data['school']
         current_director = school.director
         if current_director and current_director != self.instance:
-            raise forms.ValidationError("Cette ecole est deja rattachee a un autre directeur.")
+            raise forms.ValidationError("Cette école est déjà rattachée à un autre directeur.")
         return school
 
     def apply_scope(self, user):
@@ -218,7 +218,7 @@ class SchoolDirectorForm(BaseManagedUserForm):
 
 class PhonePasswordResetForm(BootstrapFormMixin, forms.Form):
     username = forms.CharField(label="Nom d'utilisateur", max_length=150)
-    phone_number = forms.CharField(label='Numero de telephone', max_length=20)
+    phone_number = forms.CharField(label='Numéro de téléphone', max_length=20)
     new_password1 = forms.CharField(
         label='Nouveau mot de passe',
         widget=forms.PasswordInput,
@@ -250,7 +250,7 @@ class PhonePasswordResetForm(BootstrapFormMixin, forms.Form):
             )
         except User.DoesNotExist as exc:
             raise forms.ValidationError(
-                "Aucun compte actif ne correspond a l'identifiant et au numero de telephone renseignes."
+                "Aucun compte actif ne correspond à l'identifiant et au numéro de téléphone renseignés."
             ) from exc
 
         if password1:

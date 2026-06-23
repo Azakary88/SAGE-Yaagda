@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ page_title }} | DREPPNF Yaagda{% endblock %}
+{% block title %}{{ page_title }} | SAGE YAADGA{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
@@ -20,8 +20,8 @@
                 <tr>
                     <th>Nom d'utilisateur</th>
                     <th>Nom complet</th>
-                    <th>Role</th>
-                    <th>Region</th>
+                    <th>Rôle</th>
+                    <th>Région</th>
                     <th>Province</th>
                     <th>CEB</th>
                     <th>Actif</th>
@@ -45,7 +45,7 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="8" class="text-center text-muted py-4">Aucun utilisateur n'est disponible dans votre perimetre.</td>
+                        <td colspan="8" class="text-center text-muted py-4">Aucun utilisateur n'est disponible dans votre zone d'action.</td>
                     </tr>
                 {% endfor %}
             </tbody>

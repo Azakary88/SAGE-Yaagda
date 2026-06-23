@@ -52,7 +52,7 @@ class CEB(models.Model):
 class School(models.Model):
     class SchoolType(models.TextChoices):
         PUBLIC = 'PUBLIC', 'Publique'
-        PRIVATE = 'PRIVATE', 'Privee'
+        PRIVATE = 'PRIVATE', 'Privée'
         COMMUNITY = 'COMMUNITY', 'Communautaire'
 
     class Status(models.TextChoices):
@@ -144,7 +144,7 @@ class ProvinceEvaluation(BaseAdministrativeEvaluation):
         ]
 
     def __str__(self):
-        return f'Evaluation province {self.province.name} ({self.evaluation_date})'
+        return f'Évaluation province {self.province.name} ({self.evaluation_date})'
 
 
 class CEBEvaluation(BaseAdministrativeEvaluation):
@@ -163,7 +163,7 @@ class CEBEvaluation(BaseAdministrativeEvaluation):
         ]
 
     def __str__(self):
-        return f'Evaluation CEB {self.ceb.name} ({self.evaluation_date})'
+        return f'Évaluation CEB {self.ceb.name} ({self.evaluation_date})'
 
 
 class SchoolAdministrativeEvaluation(BaseAdministrativeEvaluation):
@@ -182,4 +182,4 @@ class SchoolAdministrativeEvaluation(BaseAdministrativeEvaluation):
         ]
 
     def __str__(self):
-        return f'Evaluation ecole {self.school.name} ({self.evaluation_date})'
+        return f'Évaluation école {self.school.name} ({self.evaluation_date})'

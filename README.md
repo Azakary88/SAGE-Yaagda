@@ -36,10 +36,11 @@ educatives (metiers scolaires, TIC et anglais).
 
 ## Deploiement sur Render
 
-1. Creer un depot GitHub et y envoyer le projet.
+1. Creer une base PostgreSQL gratuite chez Neon et recuperer sa chaine de
+   connexion `DATABASE_URL`.
 2. Dans Render, creer un nouveau service a partir du depot puis laisser Render
-   detecter le fichier `render.yaml`.
-3. Verifier que la base PostgreSQL et les variables `DATABASE_URL`, `SECRET_KEY`
-   et `DEBUG=False` sont definies.
+   detecter le fichier `render.yaml`. Le service web utilise l'offre gratuite.
+3. Renseigner la variable `DATABASE_URL` avec la chaine Neon, puis verifier que
+   `SECRET_KEY` et `DEBUG=False` sont definies.
 4. Apres le premier deploiement, ouvrir le Shell Render et lancer :
    `python manage.py createsuperuser`.

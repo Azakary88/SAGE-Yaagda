@@ -2,21 +2,16 @@ services:
   - type: web
     name: sage-yaadga
     runtime: python
+    plan: free
     buildCommand: bash build.sh
     startCommand: gunicorn dreppnf_platform.wsgi:application
     healthCheckPath: /health/
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: sage-yaadga-db
-          property: connectionString
+        sync: false
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
         value: "False"
       - key: PYTHON_VERSION
         value: "3.12.8"
-databases:
-  - name: sage-yaadga-db
-    databaseName: sage_yaadga
-    user: sage_yaadga

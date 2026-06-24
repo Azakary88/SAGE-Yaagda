@@ -8,15 +8,30 @@ from django.db.models import Avg, Count, Q, Sum
 
 from schools.models import School
 
-try:
-    from sklearn.cluster import KMeans
-    from sklearn.preprocessing import StandardScaler
 
-    SKLEARN_AVAILABLE = True
-except ImportError:  # pragma: no cover - exercised implicitly when sklearn is unavailable.
-    KMeans = None
-    StandardScaler = None
-    SKLEARN_AVAILABLE = False
+KMeans = None
+StandardScaler = None
+SKLEARN_AVAILABLE = None
+
+
+def _load_sklearn():
+    """Avoid loading SciPy during normal dashboard and upload requests."""
+    global KMeans, SKLEARN_AVAILABLE, StandardScaler
+
+    if SKLEARN_AVAILABLE is not None:
+        return SKLEARN_AVAILABLE
+
+    try:
+        from sklearn.cluster import KMeans as sklearn_kmeans
+        from sklearn.preprocessing import StandardScaler as sklearn_standard_scaler
+    except ImportError:  # pragma: no cover - exercised when sklearn is unavailable.
+        SKLEARN_AVAILABLE = False
+    else:
+        KMeans = sklearn_kmeans
+        StandardScaler = sklearn_standard_scaler
+        SKLEARN_AVAILABLE = True
+
+    return SKLEARN_AVAILABLE
 
 
 @dataclass
@@ -203,7 +218,7 @@ def _build_action(row: SchoolFeatureRow, profile_label: str) -> str:
 
 
 def _standardize_matrix(feature_matrix):
-    if SKLEARN_AVAILABLE:
+    if _load_sklearn():
         scaler = StandardScaler()
         return scaler.fit_transform(feature_matrix)
 
@@ -241,7 +256,7 @@ def _cluster_profiles(feature_matrix, risk_scores):
         return None, 'Analyse individuelle locale'
 
     cluster_count = min(3, sample_size)
-    if SKLEARN_AVAILABLE:
+    if _load_sklearn():
         normalized = _standardize_matrix(feature_matrix)
         model = KMeans(n_clusters=cluster_count, random_state=42, n_init=10)
         labels = model.fit_predict(normalized)

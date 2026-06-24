@@ -44,3 +44,10 @@ educatives (metiers scolaires, TIC et anglais).
    `SECRET_KEY` et `DEBUG=False` sont definies.
 4. Apres le premier deploiement, ouvrir le Shell Render et lancer :
    `python manage.py createsuperuser`.
+
+## Fichiers utilisateurs
+
+En production, definir `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` et
+`CLOUDINARY_API_SECRET` pour conserver les images et documents envoyes par les
+utilisateurs apres les redemarrages Render. Les fichiers statiques restent
+servis par WhiteNoise.

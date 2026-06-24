@@ -8,6 +8,14 @@ SECRET_KEY = os.getenv(
     'django-insecure-g6fw+!^@i-6n&qjsowbaca@0sdkrei5fs07$g=$00fn&-p#fk#',
 )
 DEBUG = os.getenv('DEBUG', 'True').lower() in {'1', 'true', 'yes'}
+CLOUDINARY_MEDIA_ENABLED = all(
+    os.getenv(name)
+    for name in (
+        'CLOUDINARY_CLOUD_NAME',
+        'CLOUDINARY_API_KEY',
+        'CLOUDINARY_API_SECRET',
+    )
+)
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 ALLOWED_HOSTS += [host for host in os.getenv('ALLOWED_HOSTS', '').split(',') if host]
@@ -32,6 +40,9 @@ INSTALLED_APPS = [
     'innovations',
     'dashboard',
 ]
+
+if CLOUDINARY_MEDIA_ENABLED:
+    INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -141,6 +152,17 @@ STORAGES = {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
+
+if CLOUDINARY_MEDIA_ENABLED:
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ['CLOUDINARY_CLOUD_NAME'],
+        'API_KEY': os.environ['CLOUDINARY_API_KEY'],
+        'API_SECRET': os.environ['CLOUDINARY_API_SECRET'],
+    }
+    STORAGES['default'] = {
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+    }
+
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

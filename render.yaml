@@ -4,7 +4,7 @@ services:
     runtime: python
     plan: free
     buildCommand: bash build.sh
-    startCommand: gunicorn dreppnf_platform.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: gunicorn dreppnf_platform.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --graceful-timeout 30
     healthCheckPath: /health/
     envVars:
       - key: DATABASE_URL

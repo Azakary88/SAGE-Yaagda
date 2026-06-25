@@ -80,7 +80,7 @@ class ActivityForm(BootstrapFormMixin, forms.ModelForm):
 
 
 class ActivityMediaForm(BootstrapFormMixin, forms.ModelForm):
-    MAX_FILE_SIZE = 5 * 1024 * 1024
+    MAX_FILE_SIZE = 2 * 1024 * 1024
     ALLOWED_CONTENT_TYPES = {'image/jpeg', 'image/png', 'image/gif', 'image/webp'}
 
     class Meta:
@@ -109,7 +109,7 @@ class ActivityMediaForm(BootstrapFormMixin, forms.ModelForm):
 
         if file.size > self.MAX_FILE_SIZE:
             raise forms.ValidationError(
-                "L'image est trop volumineuse. Veuillez choisir une image de 5 Mo maximum."
+                "L'image est trop volumineuse. Veuillez choisir une image de 2 Mo maximum."
             )
 
         return file

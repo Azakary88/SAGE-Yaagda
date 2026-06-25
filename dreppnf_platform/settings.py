@@ -159,6 +159,20 @@ if CLOUDINARY_MEDIA_ENABLED:
         'API_KEY': os.environ['CLOUDINARY_API_KEY'],
         'API_SECRET': os.environ['CLOUDINARY_API_SECRET'],
     }
+    try:
+        import cloudinary
+    except ImportError as exc:
+        raise RuntimeError(
+            'cloudinary est requis lorsque le stockage Cloudinary est configure.'
+        ) from exc
+
+    cloudinary.config(
+        cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+        api_key=CLOUDINARY_STORAGE['API_KEY'],
+        api_secret=CLOUDINARY_STORAGE['API_SECRET'],
+        secure=True,
+        timeout=20,
+    )
     STORAGES['default'] = {
         'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
     }

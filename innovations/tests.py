@@ -235,7 +235,7 @@ class ActivityPermissionTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '5 Mo maximum')
+        self.assertContains(response, '2 Mo maximum')
         self.assertFalse(ActivityMedia.objects.filter(comment='Image trop lourde').exists())
 
     @patch('innovations.models.ActivityMedia.save', side_effect=Exception('storage unavailable'))

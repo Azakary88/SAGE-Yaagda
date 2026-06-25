@@ -1,0 +1,54 @@
+name: sage-yaadga
+region: fra
+services:
+  - name: web
+    environment_slug: python
+    github:
+      repo: Azakary88/SAGE-Yaagda
+      branch: main
+      deploy_on_push: true
+    build_command: bash build.sh
+    run_command: gunicorn dreppnf_platform.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --graceful-timeout 30
+    instance_count: 1
+    instance_size_slug: professional-xs
+    routes:
+      - path: /
+    health_check:
+      http_path: /health/
+    envs:
+      - key: DEBUG
+        value: "False"
+        scope: RUN_AND_BUILD_TIME
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+        scope: RUN_AND_BUILD_TIME
+      - key: ALLOWED_HOSTS
+        value: ".ondigitalocean.app"
+        scope: RUN_AND_BUILD_TIME
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.ondigitalocean.app"
+        scope: RUN_AND_BUILD_TIME
+      - key: DATABASE_URL
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      - key: SECRET_KEY
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      - key: SAGE_ADMIN_USERNAME
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      - key: SAGE_ADMIN_EMAIL
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      - key: SAGE_ADMIN_PASSWORD
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      - key: CLOUDINARY_CLOUD_NAME
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      - key: CLOUDINARY_API_KEY
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      - key: CLOUDINARY_API_SECRET
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME

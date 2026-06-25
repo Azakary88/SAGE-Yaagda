@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
@@ -5,6 +7,7 @@ from django.urls import reverse
 from accounts.models import User
 from schools.models import CEB, Province, Region, School
 
+from .forms import ActivityMediaForm
 from .models import Activity, ActivityMedia, Evaluation, Innovation
 
 
@@ -214,6 +217,42 @@ class ActivityPermissionTests(TestCase):
                 comment='Photo prise pendant l activite',
             ).exists()
         )
+
+    def test_oversized_media_upload_is_rejected(self):
+        self.client.login(username='directeur', password='test-pass-123')
+        oversized_image = SimpleUploadedFile(
+            'trop-grand.png',
+            b'x' * (ActivityMediaForm.MAX_FILE_SIZE + 1),
+            content_type='image/png',
+        )
+
+        response = self.client.post(
+            reverse('innovations:activity_detail', args=[self.activity.id]),
+            data={
+                'file': oversized_image,
+                'comment': 'Image trop lourde',
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '5 Mo maximum')
+        self.assertFalse(ActivityMedia.objects.filter(comment='Image trop lourde').exists())
+
+    @patch('innovations.models.ActivityMedia.save', side_effect=Exception('storage unavailable'))
+    def test_media_storage_error_is_displayed_on_detail_page(self, mocked_save):
+        self.client.login(username='directeur', password='test-pass-123')
+
+        response = self.client.post(
+            reverse('innovations:activity_detail', args=[self.activity.id]),
+            data={
+                'file': self._sample_image(),
+                'comment': 'Erreur stockage',
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Le média n&#x27;a pas pu être enregistré")
+        self.assertFalse(ActivityMedia.objects.filter(comment='Erreur stockage').exists())
 
     def test_authorized_regional_agent_can_see_uploaded_activity_media(self):
         ActivityMedia.objects.create(

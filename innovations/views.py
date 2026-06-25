@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -19,6 +21,30 @@ from schools.models import School
 from .forms import ActivityForm, ActivityMediaForm, ActivityReportForm
 from .models import Activity, ActivityMedia, Innovation, Recommendation
 from .reporting import build_activity_report_context, build_activity_report_pdf_response
+
+
+logger = logging.getLogger(__name__)
+
+
+def _handle_media_storage_error(form, request, activity):
+    logger.exception(
+        "Activity media upload failed",
+        extra={
+            'activity_id': activity.id,
+            'user_id': request.user.id,
+        },
+    )
+    form.add_error(
+        'file',
+        (
+            "Le média n'a pas pu être enregistré. Vérifiez que l'image n'est pas trop lourde "
+            "et que le stockage Cloudinary est correctement configuré."
+        ),
+    )
+    messages.error(
+        request,
+        "Le média n'a pas pu être enregistré. Veuillez réessayer avec une image plus légère.",
+    )
 
 
 class ActivityListView(LoginRequiredMixin, ListView):
@@ -120,7 +146,12 @@ class ActivityDetailView(LoginRequiredMixin, DetailView):
             media_item = media_form.save(commit=False)
             media_item.activity = self.object
             media_item.uploaded_by = request.user
-            media_item.save()
+            try:
+                media_item.save()
+            except Exception:
+                _handle_media_storage_error(media_form, request, self.object)
+                context = self.get_context_data(media_form=media_form)
+                return self.render_to_response(context)
             messages.success(
                 request,
                 "Le média de l'activité a été ajouté avec succès et reste visible pour tous les utilisateurs autorisés.",
@@ -233,7 +264,11 @@ class ActivityMediaCreateView(RoleRequiredMixin, FormPageMixin, CreateView):
         form.instance.activity = self.activity
         form.instance.uploaded_by = self.request.user
         self.success_url = reverse_lazy('innovations:activity_detail', kwargs={'pk': self.activity.pk})
-        return super().form_valid(form)
+        try:
+            return super().form_valid(form)
+        except Exception:
+            _handle_media_storage_error(form, self.request, self.activity)
+            return self.form_invalid(form)
 
 
 class ActivityMediaDeleteView(RoleRequiredMixin, ObjectPermissionMixin, DeletePageMixin, DeleteView):

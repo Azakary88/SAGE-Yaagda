@@ -80,6 +80,9 @@ class ActivityForm(BootstrapFormMixin, forms.ModelForm):
 
 
 class ActivityMediaForm(BootstrapFormMixin, forms.ModelForm):
+    MAX_FILE_SIZE = 5 * 1024 * 1024
+    ALLOWED_CONTENT_TYPES = {'image/jpeg', 'image/png', 'image/gif', 'image/webp'}
+
     class Meta:
         model = ActivityMedia
         fields = ['file', 'comment']
@@ -94,6 +97,22 @@ class ActivityMediaForm(BootstrapFormMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['file'].widget.attrs['accept'] = 'image/*'
+
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        content_type = getattr(file, 'content_type', '')
+
+        if content_type and content_type not in self.ALLOWED_CONTENT_TYPES:
+            raise forms.ValidationError(
+                "Le fichier doit être une image au format JPG, PNG, GIF ou WebP."
+            )
+
+        if file.size > self.MAX_FILE_SIZE:
+            raise forms.ValidationError(
+                "L'image est trop volumineuse. Veuillez choisir une image de 5 Mo maximum."
+            )
+
+        return file
 
 
 class ActivityReportForm(BootstrapFormMixin, forms.Form):

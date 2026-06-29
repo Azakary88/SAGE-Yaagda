@@ -19,6 +19,13 @@ from .forms import ActivityReportForm
 from .models import Activity, ActivityMedia, Evaluation, Recommendation
 
 
+def _pdf_cell(value, styles):
+    if isinstance(value, Paragraph):
+        return value
+    text = '' if value is None else str(value)
+    return Paragraph(escape(text).replace('\n', '<br/>'), styles['BodyText'])
+
+
 def _role_for(user):
     return User.Role.ADMINISTRATOR if user.is_superuser else user.role
 
@@ -327,7 +334,21 @@ def build_activity_report_context(user, cleaned_data):
     }
 
 
-def _build_table(rows, col_widths):
+def _build_table(rows, col_widths, styles=None):
+    if styles is not None:
+        normalized_rows = []
+        for row_index, row in enumerate(rows):
+            normalized_row = []
+            for cell in row:
+                if row_index == 0:
+                    normalized_row.append(cell)
+                elif isinstance(cell, (Paragraph, Table, ReportImage)):
+                    normalized_row.append(cell)
+                else:
+                    normalized_row.append(_pdf_cell(cell, styles))
+            normalized_rows.append(normalized_row)
+        rows = normalized_rows
+
     table = Table(rows, colWidths=col_widths, repeatRows=1)
     table.setStyle(
         TableStyle(
@@ -454,7 +475,11 @@ def build_activity_report_pdf_response(report_context):
     story.extend(
         [
             Paragraph('Indicateurs clés', styles['Heading2']),
-            _build_table(metrics_rows, [8.2 * cm, 7.0 * cm] if is_activity_report else [10.0 * cm, 12.0 * cm]),
+            _build_table(
+                metrics_rows,
+                [8.2 * cm, 7.0 * cm] if is_activity_report else [10.0 * cm, 12.0 * cm],
+                styles,
+            ),
             Spacer(1, 0.3 * cm),
         ]
     )
@@ -477,7 +502,7 @@ def build_activity_report_pdf_response(report_context):
         story.extend(
             [
                 Paragraph("Informations sur l'activité", styles['Heading2']),
-                _build_table(details_rows, [5.0 * cm, 11.2 * cm]),
+                _build_table(details_rows, [5.0 * cm, 11.2 * cm], styles),
                 Spacer(1, 0.3 * cm),
             ]
         )
@@ -497,7 +522,7 @@ def build_activity_report_pdf_response(report_context):
         story.extend(
             [
                 Paragraph('Évaluations liées', styles['Heading2']),
-                _build_table(evaluation_rows, [2.4 * cm, 4.0 * cm, 2.0 * cm, 8.0 * cm]),
+                _build_table(evaluation_rows, [2.4 * cm, 4.0 * cm, 2.0 * cm, 8.0 * cm], styles),
                 Spacer(1, 0.3 * cm),
             ]
         )
@@ -516,7 +541,7 @@ def build_activity_report_pdf_response(report_context):
         story.extend(
             [
                 Paragraph('Recommandations associées', styles['Heading2']),
-                _build_table(recommendation_rows, [2.6 * cm, 3.0 * cm, 10.8 * cm]),
+                _build_table(recommendation_rows, [2.6 * cm, 3.0 * cm, 10.8 * cm], styles),
                 Spacer(1, 0.3 * cm),
             ]
         )
@@ -536,7 +561,7 @@ def build_activity_report_pdf_response(report_context):
         story.extend(
             [
                 Paragraph('Pièces justificatives', styles['Heading2']),
-                _build_table(media_rows, [3.0 * cm, 3.8 * cm, 6.4 * cm, 3.8 * cm]),
+                _build_table(media_rows, [3.0 * cm, 3.8 * cm, 6.4 * cm, 3.8 * cm], styles),
                 Spacer(1, 0.25 * cm),
             ]
         )
@@ -567,7 +592,7 @@ def build_activity_report_pdf_response(report_context):
         story.extend(
             [
                 Paragraph('Synthèse par innovation', styles['Heading2']),
-                _build_table(innovation_rows, [7.0 * cm, 3.0 * cm, 4.0 * cm, 3.0 * cm, 3.0 * cm]),
+                _build_table(innovation_rows, [7.0 * cm, 3.0 * cm, 4.0 * cm, 3.0 * cm, 3.0 * cm], styles),
                 Spacer(1, 0.3 * cm),
             ]
         )
@@ -594,7 +619,7 @@ def build_activity_report_pdf_response(report_context):
         story.extend(
             [
                 Paragraph(report_context['comparison_title'], styles['Heading2']),
-                _build_table(comparison_rows, [11.0 * cm, 4.0 * cm, 3.5 * cm, 4.0 * cm]),
+                _build_table(comparison_rows, [11.0 * cm, 4.0 * cm, 3.5 * cm, 4.0 * cm], styles),
                 Spacer(1, 0.3 * cm),
             ]
         )
@@ -617,7 +642,11 @@ def build_activity_report_pdf_response(report_context):
         story.extend(
             [
                 Paragraph('Relevé détaillé des activités', styles['Heading2']),
-                _build_table(activity_rows, [2.3 * cm, 3.4 * cm, 3.2 * cm, 4.3 * cm, 3.0 * cm, 7.0 * cm, 2.2 * cm]),
+                _build_table(
+                    activity_rows,
+                    [2.3 * cm, 3.4 * cm, 3.2 * cm, 4.3 * cm, 3.0 * cm, 7.0 * cm, 2.2 * cm],
+                    styles,
+                ),
                 Spacer(1, 0.3 * cm),
             ]
         )

@@ -1,4 +1,5 @@
 from io import BytesIO
+from urllib.request import urlopen
 
 from django.db.models import Avg, Count, Sum
 from django.http import HttpResponse
@@ -19,11 +20,28 @@ from .forms import ActivityReportForm
 from .models import Activity, ActivityMedia, Evaluation, Recommendation
 
 
+IMAGE_FETCH_TIMEOUT = 8
+
+
 def _pdf_cell(value, styles):
     if isinstance(value, Paragraph):
         return value
     text = '' if value is None else str(value)
     return Paragraph(escape(text).replace('\n', '<br/>'), styles['BodyText'])
+
+
+def _report_image_for_media(media, max_width, max_height):
+    try:
+        image = ReportImage(media.file.path)
+    except (NotImplementedError, ValueError, OSError):
+        image_url = media.file.url
+        if image_url.startswith('/'):
+            raise
+        with urlopen(image_url, timeout=IMAGE_FETCH_TIMEOUT) as response:
+            image = ReportImage(BytesIO(response.read()))
+
+    image._restrictSize(max_width, max_height)
+    return image
 
 
 def _role_for(user):
@@ -379,8 +397,7 @@ def _build_media_gallery_table(media_items, styles, include_activity_context=Fal
     for media in media_items:
         cell_rows = []
         try:
-            image = ReportImage(media.file.path)
-            image._restrictSize(image_width, image_height)
+            image = _report_image_for_media(media, image_width, image_height)
             cell_rows.append([image])
         except Exception:
             cell_rows.append([Paragraph("Image indisponible dans l'export PDF.", styles['Italic'])])

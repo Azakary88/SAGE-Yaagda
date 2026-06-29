@@ -9,6 +9,7 @@ from schools.models import CEB, Province, Region, School
 
 from .forms import ActivityMediaForm
 from .models import Activity, ActivityMedia, Evaluation, Innovation
+from .reporting import _report_image_for_media
 
 
 VALID_GIF_BYTES = (
@@ -512,3 +513,37 @@ class ActivityReportTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertIn(b'/Subtype /Image', response.content)
+
+    @patch('innovations.reporting.urlopen')
+    def test_activity_report_pdf_loads_remote_uploaded_image(self, mocked_urlopen):
+        class RemoteImageResponse:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, traceback):
+                return False
+
+            def read(self):
+                return VALID_GIF_BYTES
+
+        class RemoteFieldFile:
+            url = 'https://res.cloudinary.com/demo/image/upload/report.gif'
+
+            @property
+            def path(self):
+                raise NotImplementedError
+
+            @property
+            def name(self):
+                return 'report.gif'
+
+        class RemoteMedia:
+            file = RemoteFieldFile()
+
+        mocked_urlopen.return_value = RemoteImageResponse()
+
+        image = _report_image_for_media(RemoteMedia(), 100, 100)
+
+        self.assertLessEqual(image.drawWidth, 100)
+        self.assertLessEqual(image.drawHeight, 100)
+        mocked_urlopen.assert_called_once()

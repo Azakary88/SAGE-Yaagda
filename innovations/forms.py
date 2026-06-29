@@ -90,6 +90,9 @@ class ActivityMediaForm(BootstrapFormMixin, forms.ModelForm):
             'file': "Image de l'activité",
             'comment': 'Commentaire',
         }
+        help_texts = {
+            'file': "Les grandes images sont compressées automatiquement avant l'envoi.",
+        }
         widgets = {
             'comment': forms.Textarea(attrs={'rows': 3}),
         }

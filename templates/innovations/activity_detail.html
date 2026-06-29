@@ -72,6 +72,9 @@
                         <div class="col-md-5">
                             {{ media_form.file.label_tag }}
                             {{ media_form.file }}
+                            {% if media_form.file.help_text %}
+                                <div class="form-text">{{ media_form.file.help_text }}</div>
+                            {% endif %}
                             {% for error in media_form.file.errors %}
                                 <div class="text-danger small mt-1">{{ error }}</div>
                             {% endfor %}

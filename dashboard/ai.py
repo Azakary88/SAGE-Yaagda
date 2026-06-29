@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import json
 
 import numpy as np
-from django.db.models import Avg, Count, Q, Sum
+from django.db.models import Avg, Count, Max, Q, Sum
 
 from schools.models import School
 
@@ -97,7 +97,7 @@ def _build_school_feature_rows(school_queryset):
                 distinct=True,
             ),
             media_total=Count('activities__media_items', distinct=True),
-            total_participants=Sum('activities__participating_students'),
+            total_participants=Max('activities__participating_students'),
             total_trained_teachers=Sum('activities__trained_teachers'),
             internet_enabled_activities=Count(
                 'activities',

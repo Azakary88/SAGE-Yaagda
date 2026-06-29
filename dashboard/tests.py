@@ -133,13 +133,24 @@ class DashboardScopeTests(TestCase):
         self.assertEqual([school.id for school in response.context['school_rows']], [self.school.id])
 
     def test_director_dashboard_only_lists_own_activities_and_media(self):
+        Activity.objects.create(
+            school=self.school,
+            innovation=self.innovation,
+            title='Deuxieme activite memes eleves',
+            participating_students=12,
+            created_by=self.director,
+        )
         self.client.login(username='directeur', password='test-pass-123')
 
         response = self.client.get(reverse('dashboard:home'))
 
         self.assertEqual(response.context['dashboard_level'], 'director')
-        self.assertEqual([activity.id for activity in response.context['director_activities']], [self.activity.id])
+        self.assertEqual(
+            [activity.title for activity in response.context['director_activities']],
+            ['Deuxieme activite memes eleves', self.activity.title],
+        )
         self.assertEqual(response.context['secondary_metric_value'], 1)
+        self.assertEqual(response.context['tertiary_metric_value'], 12)
         self.assertEqual(response.context['ai_analysis']['insights'][0]['school_name'], self.school.name)
 
     def test_ai_analysis_page_is_available_in_user_scope(self):

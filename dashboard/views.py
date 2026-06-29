@@ -2,7 +2,7 @@ import json
 from io import BytesIO
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Avg, Count, Sum
+from django.db.models import Avg, Count, Max
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
@@ -69,6 +69,13 @@ def _build_ai_detail_context(user, limit=50):
         'ai_title': ai_titles['title'],
         'ai_subtitle': ai_titles['subtitle'],
     }
+
+
+def _estimate_unique_participants(activity_queryset):
+    school_rows = activity_queryset.values('school_id').annotate(
+        estimated_students=Max('participating_students'),
+    )
+    return sum(row['estimated_students'] or 0 for row in school_rows)
 
 
 @login_required
@@ -274,7 +281,7 @@ def home(request):
             'uploaded_by',
         )
         media_total = media_items.count()
-        participants_total = visible_activities.aggregate(total=Sum('participating_students'))['total'] or 0
+        participants_total = _estimate_unique_participants(visible_activities)
         context.update(
             {
                 'dashboard_level': 'director',
@@ -288,7 +295,7 @@ def home(request):
                 'primary_metric_value': activities_total,
                 'secondary_metric_label': 'Images téléversées',
                 'secondary_metric_value': media_total,
-                'tertiary_metric_label': 'Élèves touchés',
+                'tertiary_metric_label': 'Élèves touchés estimés',
                 'tertiary_metric_value': participants_total,
                 'quaternary_metric_label': 'Évaluations innovation',
                 'quaternary_metric_value': innovation_evaluations_total,

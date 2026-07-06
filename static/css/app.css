@@ -12,8 +12,10 @@ body {
     align-items: center;
     flex: 0 0 auto;
     margin-right: 1.1rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
+    padding: 0.25rem 0.55rem;
+    background: #ffffff;
+    border-radius: 0.55rem;
+    box-shadow: 0 0.25rem 0.75rem rgba(10, 60, 35, 0.14);
 }
 
 .app-navbar-logo {

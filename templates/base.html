@@ -10,7 +10,9 @@
 <body>
     <nav class="navbar navbar-expand-xl navbar-dark bg-success shadow-sm app-navbar">
         <div class="container-xxl px-3 px-xl-4">
-            <a class="navbar-brand fw-semibold" href="{% url 'dashboard:home' %}">SAGE YAADGA</a>
+            <a class="navbar-brand app-navbar-brand" href="{% url 'dashboard:home' %}" aria-label="SAGE YAADGA">
+                <img class="app-navbar-logo" src="/static/img/sage-yaadga-navbar.png" alt="SAGE YAADGA">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-label="Basculer la navigation">
                 <span class="navbar-toggler-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Basculer la navigation</span>

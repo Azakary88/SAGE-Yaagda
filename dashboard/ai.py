@@ -52,6 +52,8 @@ class SchoolFeatureRow:
     total_admin_evaluations: int
     avg_innovation_score: float
     avg_admin_score: float
+    has_innovation_score: bool
+    has_admin_score: bool
 
     @property
     def internet_ratio(self) -> float:
@@ -132,6 +134,8 @@ def _build_school_feature_rows(school_queryset):
                 total_admin_evaluations=school.total_admin_evaluations or 0,
                 avg_innovation_score=_safe_score(school.avg_innovation_score),
                 avg_admin_score=_safe_score(school.avg_admin_score),
+                has_innovation_score=school.avg_innovation_score is not None,
+                has_admin_score=school.avg_admin_score is not None,
             )
         )
     return rows
@@ -180,9 +184,13 @@ def _build_explanation(row: SchoolFeatureRow, profile_label: str) -> str:
         reasons.append("aucune activité remontée")
     elif row.total_activities < 2:
         reasons.append("volume d'activités encore faible")
-    if row.avg_innovation_score < 60:
+    if not row.has_innovation_score:
+        reasons.append("aucune évaluation d'innovation disponible")
+    elif row.avg_innovation_score < 60:
         reasons.append("résultats d'innovation à renforcer")
-    if row.avg_admin_score < 60:
+    if not row.has_admin_score:
+        reasons.append("aucune évaluation administrative disponible")
+    elif row.avg_admin_score < 60:
         reasons.append("pilotage administratif à consolider")
     if row.critical_recommendations:
         reasons.append("recommandations critiques en attente")
@@ -338,8 +346,12 @@ def build_school_ai_analysis(school_queryset, limit=8):
                 'explanation': _build_explanation(row, profile_label),
                 'recommended_action': _build_action(row, profile_label),
                 'total_activities': row.total_activities,
-                'avg_innovation_score': round(row.avg_innovation_score, 1),
-                'avg_admin_score': round(row.avg_admin_score, 1),
+                'avg_innovation_score': (
+                    f"{round(row.avg_innovation_score, 1)}/100" if row.has_innovation_score else 'N/D'
+                ),
+                'avg_admin_score': (
+                    f"{round(row.avg_admin_score, 1)}/100" if row.has_admin_score else 'N/D'
+                ),
                 'critical_recommendations': row.critical_recommendations,
                 'high_recommendations': row.high_recommendations,
             }

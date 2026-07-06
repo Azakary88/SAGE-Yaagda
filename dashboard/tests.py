@@ -244,3 +244,14 @@ class DashboardAIModuleTests(TestCase):
         self.assertIn('avg_confidence', analysis['summary'])
         self.assertIn('methodology', analysis)
         self.assertIn('confidence_score', analysis['insights'][0])
+
+    def test_ai_module_marks_missing_scores_as_not_available(self):
+        analysis = build_school_ai_analysis(School.objects.filter(province=self.province), limit=10)
+
+        school_c_insight = next(
+            insight for insight in analysis['insights'] if insight['school'].id == self.school_c.id
+        )
+
+        self.assertEqual(school_c_insight['avg_innovation_score'], 'N/D')
+        self.assertEqual(school_c_insight['avg_admin_score'], 'N/D')
+        self.assertIn("aucune évaluation", school_c_insight['explanation'])

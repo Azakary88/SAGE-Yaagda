@@ -79,6 +79,13 @@ body {
     background-color: #198754;
 }
 
+.app-footer {
+    padding: 1rem 0 1.25rem;
+    color: #5f6f65;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
 .metric-card {
     background: white;
     border-left: 5px solid #198754;
